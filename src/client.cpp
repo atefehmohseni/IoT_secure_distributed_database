@@ -1,4 +1,5 @@
 #include <iostream>
+#include "httplib.h"
 using namespace std;
 
 class IClient {
@@ -10,18 +11,27 @@ class IClient {
 
 class Client : public IClient {
     public:
-        Client(){}
+        httplib::Client *http_client;
+        Client() {
+            this->http_client = new httplib::Client("http://localhost:4444");
+        }
         string read_query(string key);
         void write_query(string key, string value);
 };
 
 string Client::read_query(string key) {
-    std::cout << "Client::read_query " << key << std::endl;
-    return "test";
+    std::cout << "[DEBUG] Client::read_query key=" << key << std::endl;
+    auto res = this->http_client->Get(("&key="+key).c_str());
+    if (res->status == 200) {
+        return res->body;
+    } else {
+        return NULL;
+    }
 }
 
 void Client::write_query(string key, string value) {
-    std::cout << "Client::write_query " << key << " " << value << std::endl;
+    std::cout << "[DEBUG] Client::write_query key=" << key << "&value=" << value << std::endl;
+    auto res = this->http_client->Get(("&key="+key+"&value="+value).c_str());
     return;
 }
 
