@@ -18,5 +18,5 @@ References we might use for this projects are: \[[Condensation](https://condensa
 
 ### Week of April 26th
 - Had a meeting to discuss design questions, see the details [here](https://github.com/atefehmohseni/cs263_project/blob/main/documentation/April26.md)
-- Broke down the project into three main phases (central, distributed, seucre distributed) database
-- Started implementation of a central database
+- Broke down the project into three main phases (centralized, distributed, seucre distributed) database
+- Started implementation of a centralized database

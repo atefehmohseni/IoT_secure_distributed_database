@@ -24,15 +24,14 @@ class IDataBase {
 class DataBase : public IDataBase{
     private:
         json database;
-        ifstream i;
 
     public:
         DataBase(){
             ifstream i(DATABASE_FILE);
-            i >> database;
+            i >> this-> database;
         }
         ~DataBase(){
-            i.close();
+            //close the file
         }
         std::string read(std::string key);
         void delete_record(std::string key);
@@ -43,10 +42,8 @@ std::string DataBase::read(string key){
     //TODO: sharding the database to prevent load the whole database each time!
     //TODO: check database access. Have some authorization mechanism.
 
-    // ifstream i(DATABASE_FILE);
-    // i >> database;
-    json records = database["records"];
-
+    json records = this-> database["records"];
+ 
     for (auto it = records.begin(); it != records.end(); ++it)
     {
         if(it.key() == key) {
@@ -58,9 +55,7 @@ std::string DataBase::read(string key){
 }
 
 void DataBase::delete_record(string key){
-    // ifstream i(DATABASE_FILE);
-    // i >> database;
-    json records = database["records"];
+    json records = this-> database["records"];
     records.erase(key);
 }
 
@@ -69,9 +64,8 @@ void DataBase::write(string key, string value){
     if (old_value != ""){
         DataBase::delete_record(key);
     }
-    // ifstream i(DATABASE_FILE);
-    // i >> database;
-    json records = database["records"];
+
+    json records = this-> database["records"];
     
     //TODO: can we use basic_json::update?
     records[key] = value;
