@@ -20,3 +20,9 @@ References we might use for this projects are: \[[Condensation](https://condensa
 - Had a meeting to discuss design questions, see the details [here](https://github.com/atefehmohseni/cs263_project/blob/main/documentation/April26.md)
 - Broke down the project into three main phases (centralized, distributed, seucre distributed) database
 - Started implementation of a centralized database
+
+### Week of May 3rd
+
+- Continued on implemenation of centralized database
+- Surveyed consensus algorithms suitable for distributed database. Found out that Paxos and Raft are two good candidates. We are going to use Raft for this project.
+- Next steps: define an application for our system, survey data protection and securiry concerns in distributed databases. 
