@@ -9,7 +9,7 @@ project( distDB )
 # files
 
 # include
-include_directories( ./include ./src ./libs/httplib )
+include_directories( ./include ./src ./libs/httplib ./libs/json )
 
 # target
 add_executable( client ./src/client.cpp )
