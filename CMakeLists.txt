@@ -7,6 +7,7 @@ project( distDB )
 # dependencies
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
+find_package(OpenSSL REQUIRED)
 
 # flags
 
@@ -20,7 +21,8 @@ add_executable( client ./src/client.cpp )
 add_executable( server ./src/server.cpp )
 
 # link server with pthread
-target_link_libraries(server PRIVATE Threads::Threads)
+target_link_libraries(client PRIVATE OpenSSL::SSL)
+target_link_libraries(server PRIVATE Threads::Threads OpenSSL::SSL)
 
 # use c++17
 set_target_properties(client PROPERTIES CXX_STANDARD 17 )

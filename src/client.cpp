@@ -1,6 +1,9 @@
+#define CPPHTTPLIB_OPENSSL_SUPPORT
+
 #include <iostream>
 #include "common.h"
 #include "httplib.h"
+
 using namespace std;
 
 class IClient {
