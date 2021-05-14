@@ -22,5 +22,9 @@ add_executable( server ./src/server.cpp )
 # link server with pthread
 target_link_libraries(server PRIVATE Threads::Threads)
 
+# use c++17
+set_target_properties(client PROPERTIES CXX_STANDARD 17 )
+set_target_properties(server PROPERTIES CXX_STANDARD 17 )
+
 # external libs
 
