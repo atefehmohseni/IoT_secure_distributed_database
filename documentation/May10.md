@@ -3,7 +3,7 @@ Meeting agenda of May 12th:
 - Choose an application: 
     - IoT applications for sustainability see examples [here](https://builtin.com/internet-things/iot-environment-sustainability-green-examples)
 
-- Start working on the security aspect of the application. Good reading here.
+- Start working on the security aspect of the application. Good reading [here](https://ndy.com/lifecycle/why-cyber-security-risks-should-be-on-the-sustainability-radar).
 
 - Prepare for the presentation: 
     - Have diff implementation: 
