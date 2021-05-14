@@ -5,10 +5,10 @@
 
 using namespace std;
 
-class IServer{
+class IServer {
     public:
-    virtual std::string read_query(std::string key) = 0;
-    virtual void write_query(std::string key, std::string value) = 0;
+    virtual optional<string> read_query(string key) = 0;
+    virtual void write_query(string key, string value) = 0;
 
 };
 
@@ -20,37 +20,24 @@ class Server: public IServer, public DataBase {
 
             // set up routes for read/write query
             
-            // this-> http_server.listen("0.0.0.0", 4444);
+            //this-> http_server.listen("0.0.0.0", 4444);
         }
-        std::string read_query(std::string key);
-        void write_query(std::string key, std::string value);
+        optional<string> read_query(string key);
+        void write_query(string key, string value);
 
 };
 
-std::string Server::read_query(std::string key){
-    std::string key;
-    // get key from client over REST
-
-    std::string value = DataBase::read(key);
-
-    //send the value back to the client
-    
+optional<string> Server::read_query(string key) {
+    optional<string> value = DataBase::read(key);
     return value;
 }
 
-void Server::write_query(std::string key, std::string value)
-{
-     std::string key;
-     std::string value;
-    // get key,value from client over REST
-
+void Server::write_query(string key, string value) {
     DataBase::write(key,value);
-
 }
 
 
-int main()
-{
-    std::cout << "Server::main" << std::endl;
-    
+int main() {
+    DEBUG("Starting a Server instance");
+    Server *server = new Server();
 }
