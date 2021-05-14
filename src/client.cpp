@@ -9,8 +9,8 @@ using namespace std;
 class IClient {
     public:
         IClient(){}
-        virtual std::string read_query(std::string key) = 0;
-        virtual void write_query(std::string key, std::string value) = 0;
+        virtual string read_query(string key) = 0;
+        virtual void write_query(string key, string value) = 0;
 };
 
 class Client : public IClient {
@@ -19,12 +19,12 @@ class Client : public IClient {
         Client() {
             this->http_client = new httplib::Client("http://localhost:4444");
         }
-        std::string read_query(std::string key);
-        void write_query(std::string key, std::string value);
+        string read_query(string key);
+        void write_query(string key, string value);
 };
 
-std::string Client::read_query(std::string key) {
-    DEBUG("Client::read_query key=" << key << std::endl);
+string Client::read_query(string key) {
+    DEBUG("Client::read_query key=" << key << endl);
     auto res = this->http_client->Get(("&key="+key).c_str());
     if (res != nullptr && res->status == 200) {
         return res->body;
@@ -33,27 +33,27 @@ std::string Client::read_query(std::string key) {
     }
 }
 
-void Client::write_query(std::string key, std::string value) {
-    DEBUG("Client::write_query key=" << key << "&value=" << value << std::endl);
+void Client::write_query(string key, string value) {
+    DEBUG("Client::write_query key=" << key << "&value=" << value << endl);
     auto res = this->http_client->Get(("&key="+key+"&value="+value).c_str());
     return;
 }
 
-std::string prompt(std::string prompt) {
-    std::string input;
-    std::cout << prompt;
-    getline(std::cin, input);
+string prompt(string prompt) {
+    string input;
+    cout << prompt;
+    getline(cin, input);
     return input;
 }
 
 int main() {
-    std::string MENU_PROMPT = "r) read query  w) write query  q) quit\nPlease enter your choice: ";
-    std::string KEY_PROMPT = "Please enter a key to query: ";
-    std::string VALUE_PROMPT = "Please enter a value to query: ";
+    string MENU_PROMPT = "r) read query  w) write query  q) quit\nPlease enter your choice: ";
+    string KEY_PROMPT = "Please enter a key to query: ";
+    string VALUE_PROMPT = "Please enter a value to query: ";
 
     Client *client = new Client();
 
-    std::string key, value;
+    string key, value;
     while(1) {
         char choice = prompt(MENU_PROMPT)[0];
         switch (choice) {
@@ -70,7 +70,7 @@ int main() {
                 goto END;
                 break;
             default:
-                std::cout << "Invalid choice" << std::endl;
+                cout << "Invalid choice" << endl;
         }
     }
 

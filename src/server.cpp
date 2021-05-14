@@ -17,10 +17,10 @@ class Server: public IServer {
         httplib::Server *http_server;
         DataBase *database;
         Server() {
-            this->http_server = new httplib::Server;
+            this->http_server = new httplib::Server; //("/tmp/test.csr", "/tmp/test.key");
             this->database = new DataBase;
 
-            DEBUG("Setting up /read endpoint");
+            DEBUG("Setting up /read endpoint" << endl);
             this->http_server->Get("/read", [&](const httplib::Request &req, httplib::Response &res) {
                 if (req.has_param("key")) {
                     string key = req.get_param_value("key");
@@ -31,7 +31,7 @@ class Server: public IServer {
                 }
             });
 
-            DEBUG("Setting up /write endpoint");
+            DEBUG("Setting up /write endpoint" << endl);
             this->http_server->Get("/write", [&](const httplib::Request &req, httplib::Response &res) {
                 if (req.has_param("key") && req.has_param("value")) {
                     string key = req.get_param_value("key");
@@ -43,14 +43,14 @@ class Server: public IServer {
                 }
             });
 
-            DEBUG("Listening on 0.0.0.0:4444");
-            this-> http_server->listen("0.0.0.0", 4444);
+            DEBUG("Listening on 0.0.0.0:4444" << endl);
+            this->http_server->listen("0.0.0.0", 4444);
         }
 
 };
 
 
 int main() {
-    DEBUG("Starting a Server instance");
+    DEBUG("Starting a Server instance" << endl);
     Server *server = new Server;
 }
