@@ -26,3 +26,8 @@ References we might use for this projects are: \[[Condensation](https://condensa
 - Continued on implemenation of centralized database
 - Surveyed consensus algorithms suitable for distributed database. Found out that Paxos and [Raft](https://raft.github.io/) are two good candidates. We are going to use [Raft](https://github.com/datatechnology/cornerstone) for this project.
 - Next steps: define an application for our system, survey data protection and securiry concerns in distributed databases. 
+
+### Week of May 10rd
+
+- Had a meeting to discuss the project. [Meeting's agenda](https://github.com/atefehmohseni/cs263_project/blob/main/documentation/May10.md).
+- ...
