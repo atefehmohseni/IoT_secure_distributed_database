@@ -5,6 +5,7 @@ our database query language supports two queries:
 */
 
 #include<iostream>
+#include <iomanip>
 #include<fstream>
 #include "common.h"
 #include "json.hpp"
@@ -16,58 +17,54 @@ string DATABASE_FILE = "/tmp/database.json";
 
 class IDataBase {
     public:
-        virtual std::string read(std::string key) = 0;
-        virtual void delete_record(std::string key) = 0;
+        virtual optional<string> read(string key) = 0;
+        virtual void delete_record(string key) = 0;
         virtual void write(string key, string value) = 0;
 };
 
 class DataBase : public IDataBase {
     private:
         json database;
-
+        ofstream database_ofstream;
     public:
         DataBase() {
-            ifstream i(DATABASE_FILE);
-            i >> this-> database;
+            // read a JSON file into the json database object (see https://github.com/nlohmann/json)
+            ifstream file;
+            file.open(DATABASE_FILE);
+            file >> this->database;
+            file.close();
+
+            // init the ofstream
+            this->database_ofstream.open(DATABASE_FILE);
         }
         ~DataBase() {
-            //close the file
+            this->database_ofstream.close();
         }
-        std::string read(std::string key);
-        void delete_record(std::string key);
-        void write(std::string key, std::string value);
+
+        optional<string> read(string key);
+        void delete_record(string key);
+        void write(string key, string value);
 };
 
-std::string DataBase::read(string key) {
+optional<string> DataBase::read(string key) {
     //TODO: sharding the database to prevent load the whole database each time!
     //TODO: check database access. Have some authorization mechanism.
-    DEBUG("Database::read key=" << key << std::endl);
+    DEBUG("Database::read key=" << key << endl);
 
-    json records = this-> database["records"];
- 
-    for (auto it = records.begin(); it != records.end(); ++it) {
-        if(it.key() == key) {
-            return it.value();
-        }
-    }
-    return "";
+    return database["records"][key];
 }
 
 void DataBase::delete_record(string key) {
-    json records = this-> database["records"];
-    records.erase(key);
+    DEBUG("Database::delete key=" << key << endl);
+    this->database["records"].erase(key);
 }
 
 void DataBase::write(string key, string value) {
-    DEBUG("Database::write key=" << key << ", value=" << value << std::endl);
-    std::string old_value = DataBase::read(key);
-    if (old_value != "") {
-        DataBase::delete_record(key);
-    }
+    DEBUG("Database::write key=" << key << ", value=" << value << endl);
 
-    json records = this-> database["records"];
-    
-    //TODO: can we use basic_json::update?
-    records[key] = value;
-    
+    // overwrite any existing value
+    this->database["records"][key] = value;
+
+    // write back the database to disk
+    this->database_ofstream <<  setw(4) << this->database << endl;
 }
