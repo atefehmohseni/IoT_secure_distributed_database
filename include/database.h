@@ -30,14 +30,17 @@ class DataBase : public IDataBase {
         DataBase() {
             // read a JSON file into the json database object (see https://github.com/nlohmann/json)
             ifstream file;
-            file.open(DATABASE_FILE);
+            file.open(DATABASE_FILE, ifstream::in);
             file >> this->database;
             file.close();
 
             // init the ofstream
-            this->database_ofstream.open(DATABASE_FILE);
+            this->database_ofstream.open(DATABASE_FILE, ofstream::out | ofstream::app);
         }
         ~DataBase() {
+            // write back the database to disk
+            this->database_ofstream.seekp(0);
+            this->database_ofstream << setw(4) << this->database << endl;
             this->database_ofstream.close();
         }
 
@@ -66,5 +69,6 @@ void DataBase::write(string key, string value) {
     this->database["records"][key] = value;
 
     // write back the database to disk
-    this->database_ofstream <<  setw(4) << this->database << endl;
+    this->database_ofstream.seekp(0);
+    this->database_ofstream << setw(4) << this->database << endl;
 }
