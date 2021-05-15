@@ -29,5 +29,6 @@ References we might use for this projects are: \[[Condensation](https://condensa
 
 ### Week of May 10rd
 
-- Had a meeting to discuss the project. [Meeting's agenda](https://github.com/atefehmohseni/cs263_project/blob/main/documentation/May10.md).
-- ...
+- Had a meeting to discuss the project next steps. [Meeting's agenda](https://github.com/atefehmohseni/cs263_project/blob/main/documentation/May10.md).
+- Implemented a simple working (not yet distributed) Client, Server, and key-value store.
+- Started working on the security part.
