@@ -8,9 +8,10 @@ using namespace std;
 
 class IClient {
     public:
-        IClient(){}
+        IClient()= default;
         virtual string read_query(string key) = 0;
         virtual void write_query(string key, string value) = 0;
+        virtual void delete_query(string key) = 0;
 };
 
 class Client : public IClient {
@@ -19,13 +20,14 @@ class Client : public IClient {
         Client() {
             this->http_client = new httplib::Client("http://localhost:4444");
         }
-        string read_query(string key);
-        void write_query(string key, string value);
+        string read_query(string key) override;
+        void write_query(string key, string value) override;
+        void delete_query(string key) override;
 };
 
 string Client::read_query(string key) {
     DEBUG("Client::read_query key=" << key << endl);
-    auto res = this->http_client->Get(("&key="+key).c_str());
+    auto res = this->http_client->Get(("/get&key="+key).c_str());
     if (res != nullptr && res->status == 200) {
         return res->body;
     } else {
@@ -35,11 +37,15 @@ string Client::read_query(string key) {
 
 void Client::write_query(string key, string value) {
     DEBUG("Client::write_query key=" << key << "&value=" << value << endl);
-    auto res = this->http_client->Get(("&key="+key+"&value="+value).c_str());
-    return;
+    auto res = this->http_client->Get(("/put&key="+key+"&value="+value).c_str());
 }
 
-string prompt(string prompt) {
+void Client::delete_query(string key) {
+    DEBUG("Client::delete_query key=" << key << endl);
+    auto res = this->http_client->Get(("/delete&key="+key).c_str());
+}
+
+string prompt(const string& prompt) {
     string input;
     cout << prompt;
     getline(cin, input);
@@ -47,14 +53,14 @@ string prompt(string prompt) {
 }
 
 int main() {
-    string MENU_PROMPT = "r) read query  w) write query  q) quit\nPlease enter your choice: ";
+    string MENU_PROMPT = "r) read query  w) write query  d) delete query  q) quit\nPlease enter your choice: ";
     string KEY_PROMPT = "Please enter a key to query: ";
     string VALUE_PROMPT = "Please enter a value to query: ";
 
-    Client *client = new Client();
+    auto *client = new Client();
 
     string key, value;
-    while(1) {
+    while(true) {
         char choice = prompt(MENU_PROMPT)[0];
         switch (choice) {
             case 'r':
@@ -66,9 +72,12 @@ int main() {
                 value = prompt(VALUE_PROMPT);
                 client->write_query(key, value);
                 break;
+            case 'd':
+                key = prompt(KEY_PROMPT);
+                client->delete_query(key);
+                break;
             case 'q':
                 goto END;
-                break;
             default:
                 cout << "Invalid choice" << endl;
         }

@@ -17,9 +17,9 @@ string DATABASE_FILE = "/tmp/database.json";
 
 class IDataBase {
     public:
-        virtual optional<string> read(string key) = 0;
+        virtual optional<string> read_record(string key) = 0;
         virtual void delete_record(string key) = 0;
-        virtual void write(string key, string value) = 0;
+        virtual void write_record(string key, string value) = 0;
 };
 
 class DataBase : public IDataBase {
@@ -44,12 +44,12 @@ class DataBase : public IDataBase {
             this->database_ofstream.close();
         }
 
-        optional<string> read(string key);
-        void delete_record(string key);
-        void write(string key, string value);
+        optional<string> read_record(string key) override;
+        void delete_record(string key) override;
+        void write_record(string key, string value) override;
 };
 
-optional<string> DataBase::read(string key) {
+optional<string> DataBase::read_record(string key) {
     //TODO: sharding the database to prevent load the whole database each time!
     //TODO: check database access. Have some authorization mechanism.
     DEBUG("Database::read key=" << key << endl);
@@ -62,7 +62,7 @@ void DataBase::delete_record(string key) {
     this->database["records"].erase(key);
 }
 
-void DataBase::write(string key, string value) {
+void DataBase::write_record(string key, string value) {
     DEBUG("Database::write key=" << key << ", value=" << value << endl);
 
     // overwrite any existing value
