@@ -344,3 +344,4 @@ $RECYCLE.BIN/
 ### Project specific ###
 build
 resources/database.json
+resources/credentials.json
