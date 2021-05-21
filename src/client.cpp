@@ -22,6 +22,8 @@ class Client : public IClient {
             this->http_client->set_ca_cert_path(SSL_CERT_FILE);
             // Disable cert verification
             this->http_client->enable_server_certificate_verification(false);
+            // Basic Authentication
+            this->http_client->set_basic_auth("username", "password");
             #else
             this->http_client = new httplib::Client("http://localhost:4444");
             #endif

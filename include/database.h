@@ -57,12 +57,12 @@ optional<string> DataBase::read_record(string key) {
     //TODO: check database access. Have some authorization mechanism.
     DEBUG("Database::read key=" << key << endl);
 
-    return database["records"][key];
+    return database[key];
 }
 
 void DataBase::delete_record(string key) {
     DEBUG("Database::delete key=" << key << endl);
-    this->database["records"].erase(key);
+    this->database.erase(key);
 
     // write back the database to disk
     std::filesystem::resize_file(DATABASE_FILE, 0);
@@ -74,7 +74,7 @@ void DataBase::write_record(string key, string value) {
     DEBUG("Database::write key=" << key << ", value=" << value << endl);
 
     // overwrite any existing value
-    this->database["records"][key] = value;
+    this->database[key] = value;
 
     // write back the database to disk
     this->database_ofstream.seekp(0);

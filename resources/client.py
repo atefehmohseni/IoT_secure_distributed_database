@@ -10,6 +10,7 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 class Client:
     def __init__(self, ssl=True):
         self.http_session = requests.Session()
+        self.http_session.auth = ('username', 'password')
         # self.http_session.cert = SSL_CERT_FILE
         self.http_session.verify = False
 
