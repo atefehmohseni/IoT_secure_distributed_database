@@ -7,6 +7,7 @@ our database query language supports two queries:
 #include<iostream>
 #include <iomanip>
 #include<fstream>
+#include <filesystem>
 #include "common.h"
 #include "json.hpp"
 
@@ -35,7 +36,11 @@ class DataBase : public IDataBase {
             file.close();
 
             // init the ofstream
-            this->database_ofstream.open(DATABASE_FILE, ofstream::out | ofstream::app);
+            this->database_ofstream.open(DATABASE_FILE, ofstream::out | ofstream::trunc);
+
+            // write back the database to disk
+            this->database_ofstream.seekp(0);
+            this->database_ofstream << setw(4) << this->database << endl;
         }
         ~DataBase() {
             // write back the database to disk
@@ -60,6 +65,11 @@ optional<string> DataBase::read_record(string key) {
 void DataBase::delete_record(string key) {
     DEBUG("Database::delete key=" << key << endl);
     this->database["records"].erase(key);
+
+    // write back the database to disk
+    std::filesystem::resize_file(DATABASE_FILE, 0);
+    this->database_ofstream.seekp(0);
+    this->database_ofstream << setw(4) << this->database << endl;
 }
 
 void DataBase::write_record(string key, string value) {
