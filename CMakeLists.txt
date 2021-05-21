@@ -20,7 +20,7 @@ set(SSL TRUE)
 # files
 
 # include
-include_directories( ./include ./src ./libs/httplib ./libs/json )
+include_directories( ./include ./src ./libs/httplib ./libs/json ./libs/base64 )
 
 # target
 add_executable( client ./src/client.cpp )
