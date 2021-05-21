@@ -8,6 +8,7 @@ using namespace std;
 class IServer {
     public:
         IServer()= default;
+        virtual void start() = 0;
 };
 
 class Server: public IServer {
@@ -27,7 +28,9 @@ class Server: public IServer {
             #endif
 
             this->database = new DataBase(DATABASE_FILE);
+        }
 
+        void start() override {
             DEBUG("Setting up /get endpoint" << endl);
             this->http_server->Get("/get", [&](const httplib::Request &req, httplib::Response &res) {
                 if (req.has_param("key")) {
@@ -74,4 +77,5 @@ class Server: public IServer {
 int main() {
     DEBUG("Starting a Server instance" << endl);
     auto *server = new Server;
+    server->start();
 }
