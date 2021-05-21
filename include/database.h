@@ -26,15 +26,15 @@ class DataBase : public IDataBase {
         json database;
         ofstream database_ofstream;
     public:
-        DataBase() {
+        explicit DataBase(const string& filename) {
             // read a JSON file into the json database object (see https://github.com/nlohmann/json)
             ifstream file;
-            file.open(DATABASE_FILE, ifstream::in);
+            file.open(filename, ifstream::in);
             file >> this->database;
             file.close();
 
             // init the ofstream
-            this->database_ofstream.open(DATABASE_FILE, ofstream::out | ofstream::trunc);
+            this->database_ofstream.open(filename, ofstream::out | ofstream::trunc);
 
             // write back the database to disk
             this->database_ofstream.seekp(0);

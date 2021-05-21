@@ -26,7 +26,7 @@ class Server: public IServer {
             this->http_server = new httplib::Server; //("/tmp/test.csr", "/tmp/test.key");
             #endif
 
-            this->database = new DataBase;
+            this->database = new DataBase(DATABASE_FILE);
 
             DEBUG("Setting up /get endpoint" << endl);
             this->http_server->Get("/get", [&](const httplib::Request &req, httplib::Response &res) {
