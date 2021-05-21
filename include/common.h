@@ -22,4 +22,5 @@
 #define SSL_CERT_FILE "../resources/ssl.debug.crt"
 #define SSL_KEY_FILE "../resources/ssl.debug.key"
 
-#define DATABASE_FILE "/tmp/database.json"
+#define DATABASE_FILE "../resources/database.json"
+#define CREDENTIALS_FILE "../resources/credentials.json"
