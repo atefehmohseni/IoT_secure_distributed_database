@@ -1,5 +1,3 @@
-#define CPPHTTPLIB_OPENSSL_SUPPORT
-
 #include <iostream>
 #include "common.h"
 #include "httplib.h"
@@ -18,7 +16,15 @@ class Client : public IClient {
     public:
         httplib::Client *http_client;
         Client() {
+            #ifdef CPPHTTPLIB_OPENSSL_SUPPORT
+            this->http_client = new httplib::Client("https://localhost:4444");
+            // Use CA bundle
+            this->http_client->set_ca_cert_path(SSL_CERT_FILE);
+            // Disable cert verification
+            this->http_client->enable_server_certificate_verification(false);
+            #else
             this->http_client = new httplib::Client("http://localhost:4444");
+            #endif
         }
         string read_query(string key) override;
         void write_query(string key, string value) override;

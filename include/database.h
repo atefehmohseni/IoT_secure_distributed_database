@@ -14,8 +14,6 @@ our database query language supports two queries:
 using json = nlohmann::json;
 using namespace std;
 
-string DATABASE_FILE = "/tmp/database.json";
-
 class IDataBase {
     public:
         virtual optional<string> read_record(string key) = 0;

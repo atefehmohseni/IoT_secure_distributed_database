@@ -1,5 +1,3 @@
-#define CPPHTTPLIB_OPENSSL_SUPPORT
-
 #include <iostream>
 #include "common.h"
 #include "database.h"
@@ -14,10 +12,20 @@ class IServer {
 
 class Server: public IServer {
     public:
+        #ifdef CPPHTTPLIB_OPENSSL_SUPPORT
+        httplib::SSLServer *http_server;
+        #else
         httplib::Server *http_server;
+        #endif
+
         DataBase *database;
         Server() {
+            #ifdef CPPHTTPLIB_OPENSSL_SUPPORT
+            this->http_server = new httplib::SSLServer(SSL_CERT_FILE, SSL_KEY_FILE);
+            #else
             this->http_server = new httplib::Server; //("/tmp/test.csr", "/tmp/test.key");
+            #endif
+
             this->database = new DataBase;
 
             DEBUG("Setting up /get endpoint" << endl);
@@ -54,8 +62,10 @@ class Server: public IServer {
                 }
             });
 
-            DEBUG("Listening on 0.0.0.0:4444" << endl);
-            this->http_server->listen("0.0.0.0", 4444);
+            DEBUG("Binding to 0.0.0.0:4444" << endl);
+            if (!this->http_server->listen("0.0.0.0", 4444)) {
+                ERROR("Cannot bind to 0.0.0.0:4444" << endl);
+            }
         }
 
 };

@@ -13,6 +13,8 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 find_package(OpenSSL REQUIRED)
 
+set(SSL TRUE)
+
 # flags
 
 # files
@@ -24,9 +26,15 @@ include_directories( ./include ./src ./libs/httplib ./libs/json )
 add_executable( client ./src/client.cpp )
 add_executable( server ./src/server.cpp )
 
-# link server with pthread
-target_link_libraries(client PRIVATE OpenSSL::SSL)
-target_link_libraries(server PRIVATE Threads::Threads OpenSSL::SSL stdc++fs)
+# link with pthread, openssl, filesystem
+target_link_libraries(client PUBLIC
+        $<$<BOOL:${SSL}>:OpenSSL::SSL>
+        $<$<BOOL:${SSL}>:OpenSSL::Crypto>)
+target_link_libraries(server PUBLIC
+        $<$<BOOL:${SSL}>:OpenSSL::SSL>
+        $<$<BOOL:${SSL}>:OpenSSL::Crypto>
+        Threads::Threads
+        stdc++fs)
 
 # use c++17
 set_target_properties(client PROPERTIES CXX_STANDARD 17 )
