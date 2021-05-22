@@ -1,5 +1,6 @@
 #include <iostream>
 #include "common.h"
+#include "database.h"
 #include "httplib.h"
 
 using namespace std;
@@ -20,6 +21,7 @@ class Client : public IClient {
         httplib::Client *http_client;
         #endif
 
+        DataBase *local_store;
         Client() {
             #ifdef CPPHTTPLIB_OPENSSL_SUPPORT
             this->http_client = new httplib::SSLClient("https://localhost:4444");
@@ -33,6 +35,8 @@ class Client : public IClient {
 
             // Basic Authentication
             this->http_client->set_basic_auth("username", "password");
+
+            this->local_store = new DataBase(LOCAL_STORE_FILE);
         }
         string read_query(string key) override;
         void write_query(string key, string value) override;
