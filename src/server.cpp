@@ -90,6 +90,7 @@ class Server: public IServer {
     private:
         bool check_authorization(const httplib::Request &req) override {
             if (!req.has_header("Authorization")) {
+                DEBUG("Not Authorized: missing Authorization header" << endl);
                 return false;
             }
 
@@ -110,6 +111,7 @@ class Server: public IServer {
 
                 if (stored_hash.empty()) {
                     // username not in the database
+                    DEBUG("Not Authorized: username not in the database" << endl);
                     return false;
                 }
 
@@ -128,6 +130,7 @@ class Server: public IServer {
                 }
             }
 
+            DEBUG("Not Authorized: failed to verify username:password" << endl);
             return false;
         }
 };
