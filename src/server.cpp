@@ -11,10 +11,13 @@ class IServer {
     public:
         IServer()= default;
         virtual void start() = 0;
+        virtual int backup() = 0;
     private:
         virtual bool check_authorization(const httplib::Request &req) = 0;
 };
-
+//
+// This server is running at the edge
+//
 class Server: public IServer {
     public:
         #ifdef CPPHTTPLIB_OPENSSL_SUPPORT
@@ -23,9 +26,18 @@ class Server: public IServer {
         httplib::Server *http_server;
         #endif
 
+        // define an http client to connect to the server in cloud
+        httplib::Client *http_client;
+
         DataBase *database;
         DataBase *credentials;
         DataBase *salts;
+
+        string server_unique_id;
+
+        int write_counter;
+        int backup_frequency;
+
         Server() {
             #ifdef CPPHTTPLIB_OPENSSL_SUPPORT
             this->http_server = new httplib::SSLServer(SSL_CERT_FILE, SSL_KEY_FILE);
@@ -33,9 +45,30 @@ class Server: public IServer {
             this->http_server = new httplib::Server; //("/tmp/test.csr", "/tmp/test.key");
             #endif
 
+            // set up an httpclient to connect to the server in cloud
+            this->http_client = new httplib::Client("http://localhost:5555");
+
             this->database = new DataBase(DATABASE_FILE);
             this->credentials = new DataBase(CREDENTIALS_FILE);
             this->salts = new DataBase(SALTS_FILE);
+
+            this->write_counter = 0;
+            //set backup frequency to enable edge server backup to the cloud server every x write operation
+            this->backup_frequency = 1; // x=1
+
+
+            //TODO: make server IDs unique
+            this->server_unique_id="100";
+        }
+
+        int backup() override {
+            DEBUG("Backup local data to the cloud" << endl);
+            auto res = this->http_client->Get(("/backup?id="+this->server_unique_id).c_str());
+            if (res != nullptr && res->status == 200) {
+                return res->status;
+            } else {
+                return 0;
+            }
         }
 
         void start() override {
@@ -62,6 +95,19 @@ class Server: public IServer {
                     string key = req.get_param_value("key");
                     string value = req.get_param_value("value");
                     this->database->write_record(key, value);
+
+                    this->write_counter++;
+                    //backup files every x write operations
+                    if(this->write_counter == this->backup_frequency){
+                        // call backup
+                        int res = this->backup();
+
+                        if(res == 200){
+                        //after a successful backup, set write-operation counter to zero
+                            DEBUG("Succefuly backed up!" << endl);
+                            this->write_counter=0;
+                        }
+                    }
                     res.set_content("success", "text/plain");
                 } else {
                     res.set_content("failure", "text/plain");

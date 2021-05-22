@@ -25,5 +25,6 @@
 #define DATABASE_FILE "../resources/database.json"
 #define CREDENTIALS_FILE "../resources/credentials.json"
 #define SALTS_FILE "../resources/salts.json"
+#define DATABASE_FILE_CLOUD "../resources/cloud_database.json"
 
 #define LOCAL_STORE_FILE "../resources/local_store.json"
