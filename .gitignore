@@ -348,3 +348,6 @@ resources/credentials.json
 resources/salts.json
 resources/local_store.json
 libs/libbcrypt/crypt_blowfish/*.3
+
+# Makefile is normally ignored because of cmake
+!libs/libbcrypt/Makefile
