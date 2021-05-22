@@ -14,19 +14,25 @@ class IClient {
 
 class Client : public IClient {
     public:
+        #ifdef CPPHTTPLIB_OPENSSL_SUPPORT
+        httplib::SSLClient *http_client;
+        #else
         httplib::Client *http_client;
+        #endif
+
         Client() {
             #ifdef CPPHTTPLIB_OPENSSL_SUPPORT
-            this->http_client = new httplib::Client("https://localhost:4444");
+            this->http_client = new httplib::SSLClient("https://localhost:4444");
             // Use CA bundle
             this->http_client->set_ca_cert_path(SSL_CERT_FILE);
             // Disable cert verification
             this->http_client->enable_server_certificate_verification(false);
-            // Basic Authentication
-            this->http_client->set_basic_auth("username", "password");
             #else
             this->http_client = new httplib::Client("http://localhost:4444");
             #endif
+
+            // Basic Authentication
+            this->http_client->set_basic_auth("username", "password");
         }
         string read_query(string key) override;
         void write_query(string key, string value) override;
