@@ -43,8 +43,8 @@ class Server: public IServer {
                     res.status = 401;
                 } else if (req.has_param("key")) {
                     string key = req.get_param_value("key");
-                    optional<string> value = this->database->read_record(key);
-                    res.set_content(*value, "text/plain");
+                    string value = this->database->read_record(key);
+                    res.set_content(value, "text/plain");
                 } else {
                     res.set_content("", "text/plain");
                 }
@@ -97,11 +97,13 @@ class Server: public IServer {
                 string credentials(b64_credentials.length() / 4 * 3, '\00');
                 Base64::Decode(b64_credentials, credentials);
 
+                // split username:password
                 int delimiter = credentials.find_first_of(':');
                 string username = credentials.substr(0, delimiter);
                 string password = credentials.substr(delimiter+1);
 
-                if (*this->credentials->read_record(username) == password) {
+                // hash with bcrypt (with salt)
+                if (this->credentials->read_record(username) == password) {
                     return true;
                 }
             }

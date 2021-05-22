@@ -16,7 +16,7 @@ using namespace std;
 
 class IDataBase {
     public:
-        virtual optional<string> read_record(string key) = 0;
+        virtual string read_record(string key) = 0;
         virtual void delete_record(string key) = 0;
         virtual void write_record(string key, string value) = 0;
 };
@@ -47,17 +47,21 @@ class DataBase : public IDataBase {
             this->database_ofstream.close();
         }
 
-        optional<string> read_record(string key) override;
+        string read_record(string key) override;
         void delete_record(string key) override;
         void write_record(string key, string value) override;
 };
 
-optional<string> DataBase::read_record(string key) {
+string DataBase::read_record(string key) {
     //TODO: sharding the database to prevent load the whole database each time!
     //TODO: check database access. Have some authorization mechanism.
     DEBUG("Database::read key=" << key << endl);
 
-    return database[key];
+    if (this->database.contains(key)) {
+        return this->database[key];
+    } else {
+        return "";
+    }
 }
 
 void DataBase::delete_record(string key) {
