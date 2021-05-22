@@ -39,7 +39,8 @@ add_executable( server src/server.cpp )
 target_link_libraries( client PUBLIC
         $<$<BOOL:${SSL}>:OpenSSL::SSL>
         $<$<BOOL:${SSL}>:OpenSSL::Crypto>
-        stdc++fs )
+        stdc++fs
+        pthread )
 target_link_libraries( server PUBLIC
         ${CMAKE_SOURCE_DIR}/libs/libbcrypt/bcrypt.a
         $<$<BOOL:${SSL}>:OpenSSL::SSL>

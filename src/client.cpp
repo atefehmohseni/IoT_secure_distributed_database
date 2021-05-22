@@ -2,12 +2,15 @@
 #include "common.h"
 #include "database.h"
 #include "httplib.h"
+#include <queue>
+#include <thread>
 
 using namespace std;
 
 class IClient {
     public:
         IClient()= default;
+        virtual void start() = 0;
         virtual string read_query(string key) = 0;
         virtual void write_query(string key, string value) = 0;
         virtual void delete_query(string key) = 0;
@@ -22,6 +25,11 @@ class Client : public IClient {
         #endif
 
         DataBase *local_store;
+        queue<string> del_queue;
+        queue<pair<string, string>> put_queue;
+
+        thread local_store_thread;
+
         Client() {
             #ifdef CPPHTTPLIB_OPENSSL_SUPPORT
             this->http_client = new httplib::SSLClient("https://localhost:4444");
@@ -38,10 +46,17 @@ class Client : public IClient {
 
             this->local_store = new DataBase(LOCAL_STORE_FILE);
         }
+        void start() override;
         string read_query(string key) override;
         void write_query(string key, string value) override;
         void delete_query(string key) override;
+
+        static void local_store_callable(Client *client);
 };
+
+void Client::start() {
+    this->local_store_thread = thread(&Client::local_store_callable, this);
+}
 
 string Client::read_query(string key) {
     DEBUG("Client::read_query key=" << key << endl);
@@ -55,12 +70,42 @@ string Client::read_query(string key) {
 
 void Client::write_query(string key, string value) {
     DEBUG("Client::write_query key=" << key << "&value=" << value << endl);
-    auto res = this->http_client->Get(("/put?key="+key+"&value="+value).c_str());
+    this->local_store->write_record(key, value);
+    this->put_queue.push(make_pair(key, value));
+    //auto res = this->http_client->Get(("/put?key="+key+"&value="+value).c_str());
 }
 
 void Client::delete_query(string key) {
     DEBUG("Client::delete_query key=" << key << endl);
-    auto res = this->http_client->Get(("/delete?key="+key).c_str());
+    this->del_queue.push(key);
+    // auto res = this->http_client->Get(("/delete?key="+key).c_str());
+}
+
+void Client::local_store_callable (Client *client) {
+    while (true) {
+        // process delete queue
+        while (!client->del_queue.empty()) {
+            string key = client->del_queue.front();
+            auto res = client->http_client->Get(("/delete?key="+key).c_str());
+            if (res->status == 200) {
+                client->del_queue.pop();
+            } else {
+                break;
+            }
+        }
+        // process put queue
+        while (!client->put_queue.empty()) {
+            auto[key, value] = client->put_queue.front();
+            auto res = client->http_client->Get(("/put?key="+key+"&value="+value).c_str());
+            if (res->status == 200) {
+                client->put_queue.pop();
+                client->local_store->delete_record(key);
+            } else {
+                break;
+            }
+        }
+        sleep(5);
+    }
 }
 
 string prompt(const string& prompt) {
@@ -76,6 +121,7 @@ int main() {
     string VALUE_PROMPT = "Please enter a value to query: ";
 
     auto *client = new Client();
+    client->start();
 
     string key, value;
     while(true) {
