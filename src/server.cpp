@@ -1,5 +1,6 @@
 #include <iostream>
 #include "base64.h"
+#include "bcrypt.h"
 #include "common.h"
 #include "database.h"
 #include "httplib.h"
@@ -104,8 +105,25 @@ class Server: public IServer {
                 string username = credentials.substr(0, delimiter);
                 string password = credentials.substr(delimiter+1);
 
+                // read stored (hashed) password
+                string stored_hash = this->credentials->read_record(username);
+
+                if (stored_hash.empty()) {
+                    // username not in the database
+                    return false;
+                }
+
+                // read the stored salt
+                string salt = this->salts->read_record(username);
+                assert(!salt.empty());  // this should never happen
+
                 // hash with bcrypt (with salt)
-                if (this->credentials->read_record(username) == password) {
+                char hash[BCRYPT_HASHSIZE] = {'\00'};
+                bcrypt_hashpw(password.c_str(), salt.c_str(), hash);
+
+                // compare the stored hash with the computed hash
+                string computed_hash(hash);
+                if (stored_hash == hash) {
                     return true;
                 }
             }
