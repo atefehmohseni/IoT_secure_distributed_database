@@ -351,3 +351,4 @@ libs/libbcrypt/crypt_blowfish/*.3
 
 # Makefile is normally ignored because of cmake
 !libs/libbcrypt/Makefile
+!libs/libbcrypt/crypt_blowfish/Makefile
