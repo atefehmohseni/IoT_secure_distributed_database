@@ -345,3 +345,4 @@ $RECYCLE.BIN/
 build
 resources/database.json
 resources/credentials.json
+libs/libbcrypt/crypt_blowfish/*.3
