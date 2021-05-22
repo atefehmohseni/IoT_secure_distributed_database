@@ -23,18 +23,20 @@ class IDataBase {
 
 class DataBase : public IDataBase {
     private:
+        string filename;
         json database;
         ofstream database_ofstream;
     public:
         explicit DataBase(const string& filename) {
+            this->filename = string(filename);
             // read a JSON file into the json database object (see https://github.com/nlohmann/json)
             ifstream file;
-            file.open(filename, ifstream::in);
+            file.open(this->filename, ifstream::in);
             file >> this->database;
             file.close();
 
             // init the ofstream
-            this->database_ofstream.open(filename, ofstream::out | ofstream::trunc);
+            this->database_ofstream.open(this->filename, ofstream::out | ofstream::trunc);
 
             // write back the database to disk
             this->database_ofstream.seekp(0);
@@ -69,7 +71,7 @@ void DataBase::delete_record(string key) {
     this->database.erase(key);
 
     // write back the database to disk
-    std::filesystem::resize_file(DATABASE_FILE, 0);
+    std::filesystem::resize_file(this->filename, 0);
     this->database_ofstream.seekp(0);
     this->database_ofstream << setw(4) << this->database << endl;
 }
