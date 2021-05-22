@@ -35,7 +35,7 @@ class Client : public IClient {
 
 string Client::read_query(string key) {
     DEBUG("Client::read_query key=" << key << endl);
-    auto res = this->http_client->Get(("/get&key="+key).c_str());
+    auto res = this->http_client->Get(("/get?key="+key).c_str());
     if (res != nullptr && res->status == 200) {
         return res->body;
     } else {
@@ -45,12 +45,12 @@ string Client::read_query(string key) {
 
 void Client::write_query(string key, string value) {
     DEBUG("Client::write_query key=" << key << "&value=" << value << endl);
-    auto res = this->http_client->Get(("/put&key="+key+"&value="+value).c_str());
+    auto res = this->http_client->Get(("/put?key="+key+"&value="+value).c_str());
 }
 
 void Client::delete_query(string key) {
     DEBUG("Client::delete_query key=" << key << endl);
-    auto res = this->http_client->Get(("/delete&key="+key).c_str());
+    auto res = this->http_client->Get(("/delete?key="+key).c_str());
 }
 
 string prompt(const string& prompt) {
