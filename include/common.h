@@ -24,3 +24,4 @@
 
 #define DATABASE_FILE "../resources/database.json"
 #define CREDENTIALS_FILE "../resources/credentials.json"
+#define SALTS_FILE "../resources/salts.json"

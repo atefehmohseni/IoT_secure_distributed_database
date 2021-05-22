@@ -24,6 +24,7 @@ class Server: public IServer {
 
         DataBase *database;
         DataBase *credentials;
+        DataBase *salts;
         Server() {
             #ifdef CPPHTTPLIB_OPENSSL_SUPPORT
             this->http_server = new httplib::SSLServer(SSL_CERT_FILE, SSL_KEY_FILE);
@@ -33,6 +34,7 @@ class Server: public IServer {
 
             this->database = new DataBase(DATABASE_FILE);
             this->credentials = new DataBase(CREDENTIALS_FILE);
+            this->salts = new DataBase(SALTS_FILE);
         }
 
         void start() override {
