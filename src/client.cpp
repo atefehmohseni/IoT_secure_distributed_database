@@ -25,8 +25,7 @@ class Client : public IClient {
         #endif
 
         DataBase *local_store;
-        queue<string> del_queue;
-        queue<pair<string, string>> put_queue;
+        queue< pair<string,string> > action_queue;  // pair<action_type, key>
 
         thread local_store_thread;
 
@@ -71,35 +70,35 @@ string Client::read_query(string key) {
 void Client::write_query(string key, string value) {
     DEBUG("Client::write_query key=" << key << "&value=" << value << endl);
     this->local_store->write_record(key, value);
-    this->put_queue.push(make_pair(key, value));
-    //auto res = this->http_client->Get(("/put?key="+key+"&value="+value).c_str());
+    this->action_queue.push(make_pair("put", key));
 }
 
 void Client::delete_query(string key) {
     DEBUG("Client::delete_query key=" << key << endl);
-    this->del_queue.push(key);
-    // auto res = this->http_client->Get(("/delete?key="+key).c_str());
+    this->action_queue.push(make_pair("del", key));
 }
 
 void Client::local_store_callable (Client *client) {
     while (true) {
-        // process delete queue
-        while (!client->del_queue.empty()) {
-            string key = client->del_queue.front();
-            auto res = client->http_client->Get(("/delete?key="+key).c_str());
-            if (res->status == 200) {
-                client->del_queue.pop();
-            } else {
-                break;
+        // process action queue
+        while (!client->action_queue.empty()) {
+            int status = 500;
+            auto[type, key] = client->action_queue.front();
+
+            if (type == "del") {
+                auto res = client->http_client->Get(("/delete?key="+key).c_str());
+                status = res->status;
+            } else if (type == "put") {
+                string value = client->local_store->read_record(key);
+                auto res = client->http_client->Get(("/put?key=" + key + "&value=" + value).c_str());
+                status = res->status;
             }
-        }
-        // process put queue
-        while (!client->put_queue.empty()) {
-            auto[key, value] = client->put_queue.front();
-            auto res = client->http_client->Get(("/put?key="+key+"&value="+value).c_str());
-            if (res->status == 200) {
-                client->put_queue.pop();
-                client->local_store->delete_record(key);
+
+            if (status == 200) {
+                client->action_queue.pop();
+                if (type == "put") {
+                    client->local_store->delete_record(key);
+                }
             } else {
                 break;
             }
