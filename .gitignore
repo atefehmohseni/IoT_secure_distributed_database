@@ -343,6 +343,7 @@ $RECYCLE.BIN/
 
 ### Project specific ###
 build
+resources/cloud_database.json
 resources/database.json
 resources/credentials.json
 resources/salts.json
