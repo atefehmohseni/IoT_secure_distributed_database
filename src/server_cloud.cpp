@@ -1,4 +1,5 @@
 #include <iostream>
+#include<fstream>
 #include "common.h"
 #include "database.h"
 #include "httplib.h"
@@ -18,27 +19,33 @@ class ServerCloud: public IServerCloud {
     public:
         httplib::Server *http_server;
     
-         DataBase *database;
+        DataBase *database;
 
         ServerCloud(){
+
             this->http_server = new httplib::Server;
 
             this->database = new DataBase(DATABASE_FILE_CLOUD);
-
         }
     
         void start() override {
             DEBUG("Setting up /backup endpoint" << endl);
-            this->http_server->Get("/backup", [&](const httplib::Request &req, httplib::Response &res) {
-            if (req.has_param("id")) {
-                string server_id = req.get_param_value("id");
+            this->http_server->Post("/backup", [&](const auto& req, auto& res) {
+            auto size = req.files.size();
+            auto ret = req.has_file("backup_100");
+            auto file = req.get_file_value("backup_100");
 
-                //extract the attached file to the request and updatet the cloud_database
-               
-                res.set_content("", "text/plain");
+            ofstream ofs(file.filename);
+            ofs << file.content;
+
             });
+          
+            DEBUG("Binding to 0.0.0.0:5555" << endl);
+            if (!this->http_server->listen("0.0.0.0", 5555)) {
+                ERROR("Cannot bind to 0.0.0.0:5555" << endl);
+            }
         }
-}   
+};  
 
 int main() {
     DEBUG("Starting the Cloud Server" << endl);

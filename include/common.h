@@ -28,3 +28,6 @@
 #define DATABASE_FILE_CLOUD "../resources/cloud_database.json"
 
 #define LOCAL_STORE_FILE "../resources/local_store.json"
+
+//set backup frequency to enable edge server backup to the cloud server every x write operation
+#define BACKUP_FREQUENCY 1

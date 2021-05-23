@@ -34,6 +34,8 @@ include_directories( libs/libbcrypt )
 
 add_executable( client src/client.cpp )
 add_executable( server src/server.cpp )
+add_executable( master_server src/server_cloud.cpp )
+
 
 # link with pthread, openssl, filesystem
 target_link_libraries( client PUBLIC
@@ -48,9 +50,18 @@ target_link_libraries( server PUBLIC
         Threads::Threads
         stdc++fs )
 
+target_link_libraries( master_server PUBLIC
+        ${CMAKE_SOURCE_DIR}/libs/libbcrypt/bcrypt.a
+        $<$<BOOL:${SSL}>:OpenSSL::SSL>
+        $<$<BOOL:${SSL}>:OpenSSL::Crypto>
+        Threads::Threads
+        stdc++fs )
+
 # use c++17
 set_target_properties( client PROPERTIES CXX_STANDARD 17 )
 set_target_properties( server PROPERTIES CXX_STANDARD 17 )
+set_target_properties( master_server PROPERTIES CXX_STANDARD 17 )
+
 
 # external libs
 

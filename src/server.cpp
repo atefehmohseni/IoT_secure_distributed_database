@@ -36,7 +36,6 @@ class Server: public IServer {
         string server_unique_id;
 
         int write_counter;
-        int backup_frequency;
 
         Server() {
             #ifdef CPPHTTPLIB_OPENSSL_SUPPORT
@@ -45,17 +44,14 @@ class Server: public IServer {
             this->http_server = new httplib::Server; //("/tmp/test.csr", "/tmp/test.key");
             #endif
 
-            // set up an httpclient to connect to the server in cloud
+            // set up an httpclient to connect to the master server (in cloud)
             this->http_client = new httplib::Client("http://localhost:5555");
 
             this->database = new DataBase(DATABASE_FILE);
             this->credentials = new DataBase(CREDENTIALS_FILE);
             this->salts = new DataBase(SALTS_FILE);
 
-            this->write_counter = 0;
-            //set backup frequency to enable edge server backup to the cloud server every x write operation
-            this->backup_frequency = 1; // x=1
-
+            this->write_counter = 0;         
 
             //TODO: make server IDs unique
             this->server_unique_id="100";
@@ -63,7 +59,10 @@ class Server: public IServer {
 
         int backup() override {
             DEBUG("Backup local data to the cloud" << endl);
-            auto res = this->http_client->Get(("/backup?id="+this->server_unique_id).c_str());
+            //this->http_client->set_compress(true);
+            //ToDo: how to post the whole json file without loading it into memory?
+            json local_storage =  "{\"key6\":\"value6\"}";
+            auto res = this->http_client->Post(("/backup?id="+this->server_unique_id).c_str(),local_storage,"application/json");
             if (res != nullptr && res->status == 200) {
                 return res->status;
             } else {
@@ -97,9 +96,7 @@ class Server: public IServer {
                     this->database->write_record(key, value);
 
                     this->write_counter++;
-                    //backup files every x write operations
-                    if(this->write_counter == this->backup_frequency){
-                        // call backup
+                    if(this->write_counter == BACKUP_FREQUENCY){
                         int res = this->backup();
 
                         if(res == 200){
