@@ -31,13 +31,13 @@ class Client : public IClient {
 
         Client() {
             #ifdef CPPHTTPLIB_OPENSSL_SUPPORT
-            this->http_client = new httplib::SSLClient("https://localhost:4444");
+            this->http_client = new httplib::SSLClient("localhost", 4444);
             // Use CA bundle
             this->http_client->set_ca_cert_path(SSL_CERT_FILE);
             // Disable cert verification
             this->http_client->enable_server_certificate_verification(false);
             #else
-            this->http_client = new httplib::Client("http://localhost:4444");
+            this->http_client = new httplib::Client("localhost", 4444);
             #endif
 
             // Basic Authentication
@@ -116,8 +116,8 @@ string prompt(const string& prompt) {
 
 int main() {
     string MENU_PROMPT = "r) read query  w) write query  d) delete query  q) quit\nPlease enter your choice: ";
-    string KEY_PROMPT = "Please enter a key to query: ";
-    string VALUE_PROMPT = "Please enter a value to query: ";
+    string KEY_PROMPT = "Please enter a key: ";
+    string VALUE_PROMPT = "Please enter a value: ";
 
     auto *client = new Client();
     client->start();
