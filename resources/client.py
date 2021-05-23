@@ -1,4 +1,5 @@
 import argparse
+import json
 import requests
 import time
 import threading
@@ -11,16 +12,26 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 class LocalStore:
     def __init__(self):
-        self.data = dict()
+        with open('./local_store.json', 'rb') as f:
+            self.data = json.loads(f.read())
+        self.ofstream = open('./local_store.json', 'wb', buffering=0)
+        # self.ofstream.truncate(0)
+        self.ofstream.write(json.dumps(self.data).encode('utf-8'))
 
     def read_record(self, key):
         return self.data[key]
 
     def write_record(self, key, value):
         self.data[key] = value
+        self.ofstream.truncate(0)
+        self.ofstream.seek(0)
+        self.ofstream.write(json.dumps(self.data).encode('utf-8'))
 
     def delete_record(self, key):
         del self.data[key]
+        self.ofstream.truncate(0)
+        self.ofstream.seek(0)
+        self.ofstream.write(json.dumps(self.data).encode('utf-8'))
 
 class Client:
     def __init__(self, ssl=True):
