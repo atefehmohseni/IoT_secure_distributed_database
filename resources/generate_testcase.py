@@ -21,6 +21,6 @@ elif args.type == 'write':
 elif args.type == 'delete':
     with open('../test/delete_testcase.txt', 'w') as f:
         for i in range(100):
-            f.write('r\n')
+            f.write('d\n')
             f.write(f'key{i}\n')
         f.write('q\n')
