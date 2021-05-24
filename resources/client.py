@@ -58,18 +58,18 @@ class Client:
             return r.text
 
     def write_query(self, key, value):
-        self.action_queue.insert(0, ('put', key))
+        self.action_queue.append(('put', key))
 
         # write value to local value store
         self.local_store.write_record(key, value)
 
     def delete_query(self, key):
-        self.action_queue.insert(0, ('del', key))
+        self.action_queue.append(('del', key))
 
     @staticmethod
     def local_store_callable(client):
         while True:
-            print('running', client.action_queue)
+            # print('running', client.action_queue)
             # process action queue
             while len(client.action_queue) > 0:
                 status = 500
