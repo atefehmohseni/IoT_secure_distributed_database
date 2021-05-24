@@ -28,6 +28,7 @@ class Client : public IClient {
         queue< pair<string,string> > action_queue;  // pair<action_type, key>
 
         thread local_store_thread;
+        bool exit;
 
         Client() {
             #ifdef CPPHTTPLIB_OPENSSL_SUPPORT
@@ -44,6 +45,7 @@ class Client : public IClient {
             this->http_client->set_basic_auth("username", "password");
 
             this->local_store = new DataBase(LOCAL_STORE_FILE);
+            this->exit = false;
         }
         void start() override;
         string read_query(string key) override;
@@ -103,6 +105,8 @@ void Client::local_store_callable (Client *client) {
                 break;
             }
         }
+        if (client->exit)
+            break;
         sleep(5);
     }
 }
@@ -140,6 +144,8 @@ int main() {
                 client->delete_query(key);
                 break;
             case 'q':
+                client->exit = true;
+                client->local_store_thread.join();
                 goto END;
             default:
                 cout << "Invalid choice" << endl;
