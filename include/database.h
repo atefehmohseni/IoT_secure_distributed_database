@@ -19,6 +19,7 @@ class IDataBase {
         virtual string read_record(string key) = 0;
         virtual void delete_record(string key) = 0;
         virtual void write_record(string key, string value) = 0;
+        virtual json get_database() = 0;
 };
 
 class DataBase : public IDataBase {
@@ -52,6 +53,7 @@ class DataBase : public IDataBase {
         string read_record(string key) override;
         void delete_record(string key) override;
         void write_record(string key, string value) override;
+        json get_database() override;
 };
 
 string DataBase::read_record(string key) {
@@ -85,4 +87,8 @@ void DataBase::write_record(string key, string value) {
     // write back the database to disk
     this->database_ofstream.seekp(0);
     this->database_ofstream << setw(4) << this->database << endl;
+}
+
+json DataBase::get_database(){
+    return this->database;
 }

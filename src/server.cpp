@@ -60,9 +60,8 @@ class Server: public IServer {
         int backup() override {
             DEBUG("Backup local data to the cloud" << endl);
             //this->http_client->set_compress(true);
-            //ToDo: how to post the whole json file without loading it into memory?
-            json local_storage =  "{\"key6\":\"value6\"}";
-            auto res = this->http_client->Post(("/backup?id="+this->server_unique_id).c_str(),local_storage,"application/json");
+            //?id="+this->server_unique_id).c_str()
+            auto res = this->http_client->Post("/backup",this->database->get_database().dump(),"application/json");
             if (res != nullptr && res->status == 200) {
                 return res->status;
             } else {
@@ -98,7 +97,7 @@ class Server: public IServer {
                     this->write_counter++;
                     if(this->write_counter == BACKUP_FREQUENCY){
                         int res = this->backup();
-
+                        //cout<<res<<endl;
                         if(res == 200){
                         //after a successful backup, set write-operation counter to zero
                             DEBUG("Succefuly backed up!" << endl);

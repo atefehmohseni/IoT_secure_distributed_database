@@ -2,7 +2,7 @@
 #include<fstream>
 #include "common.h"
 #include "database.h"
-#include "httplib.h"
+#include "httplib.h" 
 
 using namespace std;
 
@@ -31,12 +31,15 @@ class ServerCloud: public IServerCloud {
         void start() override {
             DEBUG("Setting up /backup endpoint" << endl);
             this->http_server->Post("/backup", [&](const auto& req, auto& res) {
-            auto size = req.files.size();
-            auto ret = req.has_file("backup_100");
-            auto file = req.get_file_value("backup_100");
+                DEBUG("MASTER-SERVER: Recieved a backup request");
+                auto files = req.files;
+                auto content = res.body;
 
-            ofstream ofs(file.filename);
-            ofs << file.content;
+                // auto size = req.files.size();
+                // auto file = req.get_file_value("backup_100");
+
+                ofstream ofs("backup_"+time(0));
+                ofs << content;
 
             });
           
