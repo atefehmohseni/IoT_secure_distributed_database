@@ -16,6 +16,17 @@ with open('cpython.profiling.txt') as f:
 
     print({k:round(v/len(lines),2) for k,v in total.items()})
 
+print('-'*20+'\npypy profiling\n'+'-'*20)
+with open('pypy.profiling.txt') as f:
+    total = {group:0 for group in groups}
+    lines = f.readlines()
+    for line in lines:
+        match = regex.match(line)
+        for group in groups:
+            total[group] += ast.literal_eval(match.group(group))
+
+    print({k:round(v/len(lines),2) for k,v in total.items()})
+
 print('-'*20+'\ncpp profiling\n'+'-'*20)
 with open('cpp.profiling.txt') as f:
     total = {group:0 for group in groups}
