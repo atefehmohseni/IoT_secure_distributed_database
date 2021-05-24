@@ -1,0 +1,10 @@
+30.36 real,	0.09 user,	0.13 sys,	0% CPU,	7916k max mem,	0 major pagefaults,	516 minor pagefaults
+28.45 real,	0.06 user,	0.09 sys,	0% CPU,	7856k max mem,	0 major pagefaults,	515 minor pagefaults
+31.41 real,	0.09 user,	0.08 sys,	0% CPU,	7740k max mem,	0 major pagefaults,	511 minor pagefaults
+29.65 real,	0.07 user,	0.10 sys,	0% CPU,	7812k max mem,	0 major pagefaults,	515 minor pagefaults
+29.79 real,	0.10 user,	0.06 sys,	0% CPU,	7852k max mem,	0 major pagefaults,	514 minor pagefaults
+30.53 real,	0.08 user,	0.09 sys,	0% CPU,	7824k max mem,	0 major pagefaults,	512 minor pagefaults
+31.04 real,	0.07 user,	0.11 sys,	0% CPU,	7892k max mem,	0 major pagefaults,	517 minor pagefaults
+30.12 real,	0.07 user,	0.09 sys,	0% CPU,	7892k max mem,	0 major pagefaults,	517 minor pagefaults
+28.76 real,	0.07 user,	0.10 sys,	0% CPU,	7844k max mem,	0 major pagefaults,	514 minor pagefaults
+29.56 real,	0.09 user,	0.09 sys,	0% CPU,	7828k max mem,	0 major pagefaults,	513 minor pagefaults
