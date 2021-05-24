@@ -43,13 +43,16 @@ class Client:
         self.action_queue = []
         self.local_store = LocalStore()
 
+        self.exit = False
+
         if ssl:
             self.base_url = 'https://localhost:4444'
         else:
             self.base_url = 'http://localhost:4444'
 
         # start secondary thread
-        threading.Thread(target=Client.local_store_callable, args=(self, )).start()
+        self.local_store_thread = threading.Thread(target=Client.local_store_callable, args=(self, ))
+        self.local_store_thread.start()
 
     def read_query(self, key):
         r = self.http_session.get(f'{self.base_url}/get', params={'key': key})
@@ -94,6 +97,8 @@ class Client:
                 else:
                     break
 
+            if client.exit:
+                break
             time.sleep(5)
 
 if __name__ == '__main__':
@@ -123,4 +128,6 @@ if __name__ == '__main__':
             key = input()
             client.delete_query(key)
         elif choice == 'q':
+            client.exit = True
+            client.local_store_thread.join()
             exit(0)
