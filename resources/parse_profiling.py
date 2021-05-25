@@ -13,19 +13,19 @@ groups = list(regex.groupindex)
 time_dict = {"real":0, "user":0, "sys":0}
 mem_dict = {"maxmem" :0, "Mpagefaults":0, "mpagefaults":0}
 time_profile_dict = {
-    "cpp":time_dict,
-    "cpython":time_dict,
-    "pypy":time_dict,
+    "cpp":time_dict.copy(),
+    "cpython":time_dict.copy(),
+    "pypy":time_dict.copy(),
 }
 mem_profile_dict = {
-    "cpp":mem_dict,
-    "cpython":mem_dict,
-    "pypy":mem_dict,
+    "cpp":mem_dict.copy(),
+    "cpython":mem_dict.copy(),
+    "pypy":mem_dict.copy(),
 }
 
-write_profiles = {"time": time_profile_dict,"mem":mem_profile_dict}
-read_profiles = {"time": time_profile_dict,"mem":mem_profile_dict}
-delete_profiles = {"time": time_profile_dict,"mem":mem_profile_dict}
+write_profiles = {"time": time_profile_dict.copy(),"mem":mem_profile_dict.copy()}
+read_profiles = {"time": time_profile_dict.copy(),"mem":mem_profile_dict.copy()}
+delete_profiles = {"time": time_profile_dict.copy(),"mem":mem_profile_dict.copy()}
 
 def make_time_plot(profile_dict):
     # set width of bars
