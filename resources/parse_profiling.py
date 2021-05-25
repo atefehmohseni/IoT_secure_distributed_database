@@ -81,7 +81,10 @@ def make_mem_plot(read_profile, write_profile, delete_profile, memroy_info):
     plt.bar(r3, bars3, color='#2d7f5e', width=barWidth, edgecolor='white', label='del_query')
 
     # Add xticks on the middle of the group bars
-    plt.xlabel(memroy_info, fontweight='bold')
+    x_label = "Max Memory Usage"
+    if memroy_info == "mpagefaults":
+        x_label = "Minor pagefaults"
+    plt.xlabel(x_label, fontweight='bold')
     plt.xticks([r + barWidth for r in range(len(bars1))], ['CPP', 'CPython', 'Pypy'])
     
     # Create legend & Show graphic
@@ -108,7 +111,7 @@ def make_cpu_plot(read_profile, write_profile, delete_profile, cpu_info="cpu"):
     plt.bar(r3, bars3, color='#2d7f5e', width=barWidth, edgecolor='white', label='del_query')
 
     # Add xticks on the middle of the group bars
-    plt.xlabel(cpu_info, fontweight='bold')
+    plt.xlabel("CPU Usage", fontweight='bold')
     plt.xticks([r + barWidth for r in range(len(bars1))], ['CPP', 'CPython', 'Pypy'])
     
     # Create legend & Show graphic
