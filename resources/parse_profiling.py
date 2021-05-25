@@ -34,12 +34,12 @@ write_profiles = {"time": time_profile_dict.copy(),"mem":mem_profile_dict.copy()
 read_profiles = {"time": time_profile_dict.copy(),"mem":mem_profile_dict.copy(), "cpu": cpu_profile_dict.copy()}
 delete_profiles = {"time": time_profile_dict.copy(),"mem":mem_profile_dict.copy(), "cpu": cpu_profile_dict.copy()}
 
-def make_time_plot(profile_dict):
+def make_time_plot(profile_dict, profile_type):
     # set width of bars
     barWidth = 0.20
 
     # set heights of bars
-    #bars1 = [profile_dict["time"]["cpp"]["real"], profile_dict["time"]["cpython"]["real"], profile_dict["time"]["pypy"]["real"]]
+   # bars1 = [profile_dict["time"]["cpp"]["real"], profile_dict["time"]["cpython"]["real"], profile_dict["time"]["pypy"]["real"]]
     bars2 = [profile_dict["time"]["cpp"]["user"], profile_dict["time"]["cpython"]["user"], profile_dict["time"]["pypy"]["user"]]
     bars3 = [profile_dict["time"]["cpp"]["sys"], profile_dict["time"]["cpython"]["sys"], profile_dict["time"]["pypy"]["sys"]]
 
@@ -54,7 +54,7 @@ def make_time_plot(profile_dict):
     plt.bar(r3, bars3, color='#2d7f5e', width=barWidth, edgecolor='white', label='system')
 
     # Add xticks on the middle of the group bars
-    plt.xlabel('Time', fontweight='bold')
+    plt.xlabel('Time of {0} Query'.format(profile_type), fontweight='bold')
     plt.xticks([r + barWidth for r in range(len(bars2))], ['CPP', 'CPython', 'Pypy'])
     
     # Create legend & Show graphic
@@ -176,7 +176,9 @@ for filename in ['profiling_data/cpp.write.profile', 'profiling_data/cpython.wri
 
 #print(delete_profiles)
 
-make_time_plot(write_profiles)
+make_time_plot(write_profiles, profile_type="Write")
+make_time_plot(read_profiles, profile_type="Read")
+make_time_plot(delete_profiles, profile_type="Delete")
 
 make_mem_plot(read_profiles, write_profiles, delete_profiles, memroy_info="maxmem")
 
