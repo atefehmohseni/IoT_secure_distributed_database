@@ -36,39 +36,12 @@ delete_profiles = {"time": time_profile_dict.copy(),"mem":mem_profile_dict.copy(
 
 def make_time_plot(profile_dict, profile_type):
     # set width of bars
-    barWidth = 0.20
+    barWidth = 0.10
 
     # set heights of bars
-   # bars1 = [profile_dict["time"]["cpp"]["real"], profile_dict["time"]["cpython"]["real"], profile_dict["time"]["pypy"]["real"]]
-    bars2 = [profile_dict["time"]["cpp"]["user"], profile_dict["time"]["cpython"]["user"], profile_dict["time"]["pypy"]["user"]]
-    bars3 = [profile_dict["time"]["cpp"]["sys"], profile_dict["time"]["cpython"]["sys"], profile_dict["time"]["pypy"]["sys"]]
-
-    # Set position of bar on X axis
-    r1 = np.arange(len(bars2))
-    r2 = [x + barWidth for x in r1]
-    r3 = [x + barWidth for x in r2]
-
-    # Make the plot
-    #plt.bar(r1, bars1, color='#7f6d5f', width=barWidth, edgecolor='white', label='real')
-    plt.bar(r2, bars2, color='#557f2d', width=barWidth, edgecolor='white', label='user')
-    plt.bar(r3, bars3, color='#2d7f5e', width=barWidth, edgecolor='white', label='system')
-
-    # Add xticks on the middle of the group bars
-    plt.xlabel('Time of {0} Query'.format(profile_type), fontweight='bold')
-    plt.xticks([r + barWidth for r in range(len(bars2))], ['CPP', 'CPython', 'Pypy'])
-    
-    # Create legend & Show graphic
-    plt.legend()
-    plt.show()
-
-def make_mem_plot(read_profile, write_profile, delete_profile, memroy_info):
-     # set width of bars
-    barWidth = 0.20
-
-    # set heights of bars
-    bars1 = [read_profile["mem"]["cpp"][memroy_info], read_profile["mem"]["cpython"][memroy_info], read_profile["mem"]["pypy"][memroy_info]]
-    bars2 = [write_profile["mem"]["cpp"][memroy_info], write_profile["mem"]["cpython"][memroy_info], write_profile["mem"]["pypy"][memroy_info]]
-    bars3 = [delete_profile["mem"]["cpp"][memroy_info], delete_profile["mem"]["cpython"][memroy_info], delete_profile["mem"]["pypy"][memroy_info]]
+    bars1 = [profile_dict["time"]["cpp"]["sys"], profile_dict["time"]["cpp"]["user"]]
+    bars2 = [profile_dict["time"]["pypy"]["sys"],profile_dict["time"]["pypy"]["user"]]
+    bars3 = [profile_dict["time"]["cpython"]["sys"],profile_dict["time"]["cpython"]["user"]]
 
     # Set position of bar on X axis
     r1 = np.arange(len(bars1))
@@ -76,29 +49,94 @@ def make_mem_plot(read_profile, write_profile, delete_profile, memroy_info):
     r3 = [x + barWidth for x in r2]
 
     # Make the plot
-    plt.bar(r1, bars1, color='#7f6d5f', width=barWidth, edgecolor='white', label='read_query')
-    plt.bar(r2, bars2, color='#557f2d', width=barWidth, edgecolor='white', label='write_query')
-    plt.bar(r3, bars3, color='#2d7f5e', width=barWidth, edgecolor='white', label='del_query')
+    plt.bar(r1, bars1, color = "sandybrown", width=barWidth, edgecolor='white', label='CPP')
+    plt.bar(r2, bars2, color = "lightseagreen", width=barWidth, edgecolor='white', label='PyPy')
+    plt.bar(r3, bars3, color = "plum", width=barWidth, edgecolor='white', label='CPython')
+
+    # Add xticks on the middle of the group bars
+    plt.xlabel('Time of {0} Query'.format(profile_type), fontweight='bold')
+    plt.xticks([r + barWidth for r in range(len(bars1))], ['System', 'User'])
+    
+    # Create legend & Show graphic
+    plt.legend()
+    plt.show()
+
+
+def make_real_time_plot(read_profile, write_profile, delete_profile):
+    # set width of bars
+    barWidth = 0.15
+ 
+    # set heights of bars    
+    bars1 = [read_profile["time"]["cpp"]["real"], write_profile["time"]["cpp"]["real"],delete_profile["time"]["cpp"]["real"]]
+    bars2 = [read_profile["time"]["pypy"]["real"],write_profile["time"]["pypy"]["real"], delete_profile["time"]["pypy"]["real"]]
+    bars3 = [read_profile["time"]["cpython"]["real"],write_profile["time"]["cpython"]["real"], delete_profile["time"]["cpython"]["real"]]
+    
+    # Set position of bar on X axis
+    r1 = np.arange(len(bars1))
+    r2 = [x + barWidth for x in r1]
+    r3 = [x + barWidth for x in r2]
+
+    # Make the plot
+    plt.bar(r1, bars1, color= "sandybrown", width=barWidth, edgecolor='white', label='CPP')
+    plt.bar(r2, bars2, color="lightseagreen", width=barWidth, edgecolor='white', label='PyPy')
+    plt.bar(r3, bars3, color= "plum", width=barWidth, edgecolor='white', label='CPython')
+
+
+    # Add xticks on the middle of the group bars
+    x_label = "Real time"
+   
+    plt.xlabel(x_label, fontweight='bold')
+    plt.xticks([r + barWidth for r in range(len(bars1))], ['Read', 'Write', 'Delete'])
+    
+    # Create legend & Show graphic
+    plt.legend()
+    plt.show()
+
+
+
+def make_mem_plot(read_profile, write_profile, delete_profile, memroy_info):
+    # set width of bars
+    barWidth = 0.15
+
+    # set heights of bars    
+    bars1 = [read_profile["mem"]["cpp"][memroy_info], write_profile["mem"]["cpp"][memroy_info],delete_profile["mem"]["cpp"][memroy_info]]
+    bars2 = [read_profile["mem"]["pypy"][memroy_info],write_profile["mem"]["pypy"][memroy_info], delete_profile["mem"]["pypy"][memroy_info]]
+    bars3 = [read_profile["mem"]["cpython"][memroy_info],write_profile["mem"]["cpython"][memroy_info], delete_profile["mem"]["cpython"][memroy_info]]
+    
+    # Set position of bar on X axis
+    r1 = np.arange(len(bars1))
+    r2 = [x + barWidth for x in r1]
+    r3 = [x + barWidth for x in r2]
+
+    # Make the plot
+    plt.bar(r1, bars1, color= "sandybrown", width=barWidth, edgecolor='white', label='CPP')
+    plt.bar(r2, bars2, color="lightseagreen", width=barWidth, edgecolor='white', label='PyPy')
+    plt.bar(r3, bars3, color= "plum", width=barWidth, edgecolor='white', label='CPython')
+
 
     # Add xticks on the middle of the group bars
     x_label = "Max Memory Usage"
     if memroy_info == "mpagefaults":
         x_label = "Minor pagefaults"
     plt.xlabel(x_label, fontweight='bold')
-    plt.xticks([r + barWidth for r in range(len(bars1))], ['CPP', 'CPython', 'Pypy'])
+    plt.xticks([r + barWidth for r in range(len(bars1))], ['Read', 'Write', 'Delete'])
     
     # Create legend & Show graphic
     plt.legend()
     plt.show()
 
 def make_cpu_plot(read_profile, write_profile, delete_profile, cpu_info="cpu"):
- # set width of bars
-    barWidth = 0.20
+    # set width of bars
+    barWidth = 0.15
 
     # set heights of bars
-    bars1 = [read_profile["cpu"]["cpp"][cpu_info], read_profile["cpu"]["cpython"][cpu_info], read_profile["cpu"]["pypy"][cpu_info]]
-    bars2 = [write_profile["cpu"]["cpp"][cpu_info], write_profile["cpu"]["cpython"][cpu_info], write_profile["cpu"]["pypy"][cpu_info]]
-    bars3 = [delete_profile["cpu"]["cpp"][cpu_info], delete_profile["cpu"]["cpython"][cpu_info], delete_profile["cpu"]["pypy"][cpu_info]]
+    # bars1 = [read_profile["cpu"]["cpp"][cpu_info], read_profile["cpu"]["cpython"][cpu_info], read_profile["cpu"]["pypy"][cpu_info]]
+    # bars2 = [write_profile["cpu"]["cpp"][cpu_info], write_profile["cpu"]["cpython"][cpu_info], write_profile["cpu"]["pypy"][cpu_info]]
+    # bars3 = [delete_profile["cpu"]["cpp"][cpu_info], delete_profile["cpu"]["cpython"][cpu_info], delete_profile["cpu"]["pypy"][cpu_info]]
+
+    bars1 = [read_profile["cpu"]["cpp"][cpu_info], write_profile["cpu"]["cpp"][cpu_info],delete_profile["cpu"]["cpp"][cpu_info]]
+    bars2 = [read_profile["cpu"]["pypy"][cpu_info],write_profile["cpu"]["pypy"][cpu_info], delete_profile["cpu"]["pypy"][cpu_info]]
+    bars3 = [read_profile["cpu"]["cpython"][cpu_info],write_profile["cpu"]["cpython"][cpu_info], delete_profile["cpu"]["cpython"][cpu_info]]
 
     # Set position of bar on X axis
     r1 = np.arange(len(bars1))
@@ -106,13 +144,13 @@ def make_cpu_plot(read_profile, write_profile, delete_profile, cpu_info="cpu"):
     r3 = [x + barWidth for x in r2]
 
     # Make the plot
-    plt.bar(r1, bars1, color='#7f6d5f', width=barWidth, edgecolor='white', label='read_query')
-    plt.bar(r2, bars2, color='#557f2d', width=barWidth, edgecolor='white', label='write_query')
-    plt.bar(r3, bars3, color='#2d7f5e', width=barWidth, edgecolor='white', label='del_query')
+    plt.bar(r1, bars1, color= "sandybrown", width=barWidth, edgecolor='white', label='CPP')
+    plt.bar(r2, bars2, color="lightseagreen", width=barWidth, edgecolor='white', label='PyPy')
+    plt.bar(r3, bars3, color= "plum", width=barWidth, edgecolor='white', label='CPython')
 
     # Add xticks on the middle of the group bars
     plt.xlabel("CPU Usage", fontweight='bold')
-    plt.xticks([r + barWidth for r in range(len(bars1))], ['CPP', 'CPython', 'Pypy'])
+    plt.xticks([r + barWidth for r in range(len(bars1))], ['Read', 'Write', 'Delete'])
     
     # Create legend & Show graphic
     plt.legend()
@@ -139,7 +177,6 @@ def parse_profile(filename):
                 total[group] += ast.literal_eval(match.group(group))
         
         runtime = get_runtime_type(filename)
-        print(runtime)
 
         #print({k:round(v/len(lines),2) for k,v in total.items()})
         for k,v in total.items():
@@ -169,16 +206,17 @@ def parse_profile(filename):
                 elif k in cpu_dict.keys():
                     delete_profiles["cpu"][runtime][k]= v
 
+
 for filename in ['profiling_data/cpp.write.profile', 'profiling_data/cpython.write.profile', 'profiling_data/pypy.write.profile',
                  'profiling_data/cpp.read.profile', 'profiling_data/cpython.read.profile', 'profiling_data/pypy.read.profile',
                  'profiling_data/cpp.delete.profile', 'profiling_data/cpython.delete.profile', 'profiling_data/pypy.delete.profile']:
     parse_profile(filename)
 
-#print(delete_profiles)
-
 make_time_plot(write_profiles, profile_type="Write")
-make_time_plot(read_profiles, profile_type="Read")
-make_time_plot(delete_profiles, profile_type="Delete")
+# make_time_plot(read_profiles, profile_type="Read")
+# make_time_plot(delete_profiles, profile_type="Delete")
+
+make_real_time_plot(read_profiles, write_profiles, delete_profiles)
 
 make_mem_plot(read_profiles, write_profiles, delete_profiles, memroy_info="maxmem")
 
