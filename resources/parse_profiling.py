@@ -81,7 +81,6 @@ def make_real_time_plot(read_profile, write_profile, delete_profile):
     plt.bar(r2, bars2, color="lightseagreen", width=barWidth, edgecolor='white', label='PyPy')
     plt.bar(r3, bars3, color= "plum", width=barWidth, edgecolor='white', label='CPython')
 
-
     # Add xticks on the middle of the group bars
     x_label = "Real time"
    
@@ -94,14 +93,14 @@ def make_real_time_plot(read_profile, write_profile, delete_profile):
 
 
 
-def make_mem_plot(read_profile, write_profile, delete_profile, memroy_info):
+def make_mem_plot(read_profile, write_profile, delete_profile, memory_info):
     # set width of bars
     barWidth = 0.15
 
     # set heights of bars    
-    bars1 = [read_profile["mem"]["cpp"][memroy_info], write_profile["mem"]["cpp"][memroy_info],delete_profile["mem"]["cpp"][memroy_info]]
-    bars2 = [read_profile["mem"]["pypy"][memroy_info],write_profile["mem"]["pypy"][memroy_info], delete_profile["mem"]["pypy"][memroy_info]]
-    bars3 = [read_profile["mem"]["cpython"][memroy_info],write_profile["mem"]["cpython"][memroy_info], delete_profile["mem"]["cpython"][memroy_info]]
+    bars1 = [read_profile["mem"]["cpp"][memory_info], write_profile["mem"]["cpp"][memory_info],delete_profile["mem"]["cpp"][memory_info]]
+    bars2 = [read_profile["mem"]["pypy"][memory_info],write_profile["mem"]["pypy"][memory_info], delete_profile["mem"]["pypy"][memory_info]]
+    bars3 = [read_profile["mem"]["cpython"][memory_info],write_profile["mem"]["cpython"][memory_info], delete_profile["mem"]["cpython"][memory_info]]
     
     # Set position of bar on X axis
     r1 = np.arange(len(bars1))
@@ -116,7 +115,7 @@ def make_mem_plot(read_profile, write_profile, delete_profile, memroy_info):
 
     # Add xticks on the middle of the group bars
     x_label = "Max Memory Usage"
-    if memroy_info == "mpagefaults":
+    if memory_info == "mpagefaults":
         x_label = "Minor pagefaults"
     plt.xlabel(x_label, fontweight='bold')
     plt.xticks([r + barWidth for r in range(len(bars1))], ['Read', 'Write', 'Delete'])
@@ -218,8 +217,8 @@ make_time_plot(write_profiles, profile_type="Write")
 
 make_real_time_plot(read_profiles, write_profiles, delete_profiles)
 
-make_mem_plot(read_profiles, write_profiles, delete_profiles, memroy_info="maxmem")
+make_mem_plot(read_profiles, write_profiles, delete_profiles, memory_info="maxmem")
 
-make_mem_plot(read_profiles, write_profiles, delete_profiles, memroy_info="mpagefaults")
+make_mem_plot(read_profiles, write_profiles, delete_profiles, memory_info="mpagefaults")
 
 make_cpu_plot(read_profiles, write_profiles, delete_profiles)
