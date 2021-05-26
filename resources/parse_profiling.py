@@ -54,7 +54,7 @@ def make_time_plot(profile_dict, profile_type):
     plt.bar(r3, bars3, color = "plum", width=barWidth, edgecolor='white', label='CPython')
 
     # Add xticks on the middle of the group bars
-    plt.xlabel('Time of {0} Query'.format(profile_type), fontweight='bold')
+    plt.xlabel('Time of {0} Query (Seconds)'.format(profile_type), fontweight='bold')
     plt.xticks([r + barWidth for r in range(len(bars1))], ['System', 'User'])
     
     # Create legend & Show graphic
@@ -82,13 +82,14 @@ def make_real_time_plot(read_profile, write_profile, delete_profile):
     plt.bar(r3, bars3, color= "plum", width=barWidth, edgecolor='white', label='CPython')
 
     # Add xticks on the middle of the group bars
-    x_label = "Real time"
+    x_label = "Real time (Seconds)"
    
     plt.xlabel(x_label, fontweight='bold')
     plt.xticks([r + barWidth for r in range(len(bars1))], ['Read', 'Write', 'Delete'])
     
     # Create legend & Show graphic
-    plt.legend()
+    plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.05),
+          ncol=3, fancybox=True, shadow=True)
     plt.show()
 
 
@@ -114,7 +115,7 @@ def make_mem_plot(read_profile, write_profile, delete_profile, memory_info):
 
 
     # Add xticks on the middle of the group bars
-    x_label = "Max Memory Usage"
+    x_label = "Max Memory Usage (KB)"
     if memory_info == "mpagefaults":
         x_label = "Minor pagefaults"
     plt.xlabel(x_label, fontweight='bold')
@@ -148,7 +149,7 @@ def make_cpu_plot(read_profile, write_profile, delete_profile, cpu_info="cpu"):
     plt.bar(r3, bars3, color= "plum", width=barWidth, edgecolor='white', label='CPython')
 
     # Add xticks on the middle of the group bars
-    plt.xlabel("CPU Usage", fontweight='bold')
+    plt.xlabel("CPU Usage (Percentage)", fontweight='bold')
     plt.xticks([r + barWidth for r in range(len(bars1))], ['Read', 'Write', 'Delete'])
     
     # Create legend & Show graphic
@@ -217,8 +218,8 @@ make_time_plot(write_profiles, profile_type="Write")
 
 make_real_time_plot(read_profiles, write_profiles, delete_profiles)
 
-make_mem_plot(read_profiles, write_profiles, delete_profiles, memory_info="maxmem")
+# make_mem_plot(read_profiles, write_profiles, delete_profiles, memory_info="maxmem")
 
-make_mem_plot(read_profiles, write_profiles, delete_profiles, memory_info="mpagefaults")
+# make_mem_plot(read_profiles, write_profiles, delete_profiles, memory_info="mpagefaults")
 
-make_cpu_plot(read_profiles, write_profiles, delete_profiles)
+# make_cpu_plot(read_profiles, write_profiles, delete_profiles)
