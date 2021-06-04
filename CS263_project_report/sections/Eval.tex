@@ -1,6 +1,50 @@
 \section{Evaluation}
 \label{sec:Eval}
 
-\subsection{C++/Python Implementation}
-
+\subsection{Project Implementation}
+We implemented the whole project in C++ \cite{prj_git}, but for the evaluation we also implemented a Python version of the client. 
 \subsection{Profiling and Performance Considerations}
+Our method for profiling is offline mainly to check program's resource usage. We used Linux \texttt{time} utility with custom format string as shown below:
+\begin{lstlisting}
+#!/bin/bash
+/usr/bin/time -o "output-file" --append -f "%e real,\t%U user,\t%S sys,\t%P CPU,
+\t%Mk max mem,\t%F major pagefaults,\t%R minor pagefaults" pypy3 client.py);
+\end{lstlisting}
+
+The syscall used in \texttt{time} command is wait4 and is called a single time at the end of the execution. In linux, the parent process can query whether the child process terminates through the wait4() system call, and then perform the final operation to completely delete the memory resources occupied by the process. wait4() function can obtain not only the status information of the sub-process, but also the resource utilization information of the sub-process, which is obtained through the parameter usage. 
+
+\subsubsection{Runtime Systems Benchmarks}
+In this project we worked with \texttt{PyPy} and \texttt{CPython} runtime systems which briefly described below.
+\begin{center}
+\begin{table}[h]
+ \caption{Comparison between PyPy and CPython}
+\begin{tabular}{ | l | p{5cm} |p{5cm} |} 
+ \hline
+  & PyPy  & CPython  \\ 
+  \hline
+  Runtime System & just-in-time compiler & Mixed mode (interpreter with profile guided optimization)  \\ 
+  \hline
+ Garbage Collection Algorithm & Incminimark (incremental with generational moving collector) & Reference Counting \\ 
+ \hline
+\end{tabular}
+\end{table}
+\end{center}
+
+\subsubsection{Profiling - Execution Time}
+Here, we are comparing the execution time of the program within different runtime systems. 
+\includegraphics[width=9.5cm, height=8cm]{sections/Figures/real_time.png}
+\includegraphics[width=9.5cm, height=8cm]{sections/Figures/time_user_sys.png}
+
+\texttt{real time} refers to actual elapsed time - time from start to finish of the call. \tetxtt{User} is the amount of CPU time spent in user-mode code within the process. This is only actual CPU time used in executing the process. Similarly, \texttt{Sys} is the amount of CPU time spent in the kernel within the process. As you can see the figures above, our program spends most of the time in user mode. \texttt{PyPy} is the slowest among the CPython and C++ executable mainly due to the time PyPy runtime spent for compilation of the codes that runs once in our program. The left chart, shows our program has a lot of network connection and while CPU is not involve the process is waiting for network responses.
+
+\subsubsection{Profiling - CPU Usage}
+As mentioned above, our program does not have heavy computation and CPU is not too involved. You can see the CPU usage of the program in the chart below. C++ CPU usage is 0\% but PyPy used CPU up to 3\%.
+
+\includegraphics[width=9.5cm, height=8cm]{sections/Figures/cpu.png}
+
+
+\subsubsection{Profiling - Memory Usage}
+Based on the memory usage result, PyPy used more memory than the others and it refers to the memory PyPy takes for compilation purposes. In the right chart, the number or minor page faults are shown. Since, CPython uses reference counting GC it reserves the locality of references in memory and causes less page faults. 
+
+\includegraphics[width=9.5cm, height=8cm]{sections/Figures/max_memory.png}
+\includegraphics[width=9.5cm, height=8cm]{sections/Figures/minor_pagefault.png}
