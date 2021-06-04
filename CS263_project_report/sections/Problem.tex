@@ -1,9 +1,15 @@
 \section{Problem}
 \label{sec:Solution}
+ We’re collectively trying to capture fine-grained, ongoing data from a fast-growing universe of IoT devices because the more data, the better the analyses are possible from that data. On the other hand, many IoT applications rely on small, non-rechargeable batteries, so reducing the operations overhead at the sensor level is very important. So there are two major challenges with IoT in the cloud: The rapid growth of data, and the lack of IoT data security. In this project we tried to addressed these two main issues by developing a secure and distributed database for IoT systems. 
 
-\subsection{Objectives}
+\subsection{Security Objectives}
 
-security and availability
+As mentioned above, security and availability are our two main objectives here. For security, we mainly focused on confidentiality meaning the data has to be secure on the motion and all the access attempt to data has to be authorized.
+\subsubsection{Access Control}
+Since, our database is publicly available through a REST API we need to assure that servers check client's credentials before executing their queries. ``HTTP Basic Authentication'' is a method for an HTTP user agent (our clients) to provide a user name and password when making a HTTP request. It's a simple and lightweight technique for enforcing access controls because it does not require cookies, session identifiers, or login pages. In order to protect client's password at servers we used ``bcrypt''. Bcrypt is an adaptive password-hashing function that iteration count can be increased over time to make it slower, so it remains resistant to brute-force search attacks even with increasing computation power. We used ``libbcrypt'' library \cite{libbcrypt} which is written in C++. 
 
-\subsection{Target Application}
-IoT
+\subsubsection{Data Encryption}
+We need to guarantee the confidentiality of the data in transit when data actively moving from clients to servers across the internet. Therefore, we assign certificates to clients, edge servers, and master servers to use encrypt messages before it sends out using HTTPS. ``cpp-httplib'' \cite{httplib} provides both HTTP and HTTPS connection in C++.
+
+\subsection{Availability}
+In order to ensure availability of our service and reduce the overhead on clients, we designed our system in a multi layer architecture which you can find the details in the next section. 
