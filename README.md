@@ -31,13 +31,13 @@ $ ./master_server
 ```
 ### Run an Edge Server
 ```bash
-$ cd build/
+$ # within the build directory 
 $ ./server
 ```
 
 ### Run a Client
 ```bash
-$ cd build/
+$ # within the build directory 
 $ ./client
 ```
 
