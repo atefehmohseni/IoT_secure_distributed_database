@@ -32,12 +32,10 @@ $ # within the build directory
 $ ./client
 ```
 
-## Profiling
-
 ### Test cases
-The test queries in [test directory](https://github.com/atefehmohseni/IoT_secure_distributed_database/tree/main/test) run write/read/delete queries from a client to an edge server (usage: `cat <test_file> | ./client`).
+The test queries in [test directory](https://github.com/atefehmohseni/IoT_secure_distributed_database/tree/main/test) can be used to run write/read/delete queries from a client to an edge server (usage: `cat <test_file> | ./client`).
 
-### Profiling Result
+## Profiling
 To collect the profiling information run the following script:
 ```bash
 $ cd resources
