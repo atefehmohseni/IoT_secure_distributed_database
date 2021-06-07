@@ -1,10 +1,10 @@
 \section{Evaluation}
 \label{sec:Eval}
 \subsection{Profiling and Performance Considerations}
-Our method for profiling is offline mainly to check program's resource usage. We used Linux \texttt{time} utility with custom format string as shown below:
+We profile the client execution on a large set of queries. Our profiling is mainly offline to assess the implementations' resource usage. The main profiling tool that we use is the Linux \texttt{time} utility with a custom format string (as shown below):
 \begin{lstlisting}
 #!/bin/bash
-/usr/bin/time -o "output-file" --append -f "%e real,\t%U user,
+/usr/bin/time -o "/tmp/profiling" --append -f "%e real,\t%U user,
 \t%S sys,\t%P CPU, \t%Mk max mem,\t%F major pagefaults,
 \t%R minor pagefaults" pypy3 client.py);
 \end{lstlisting}

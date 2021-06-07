@@ -6,14 +6,17 @@ In this section, we describe the system architecture and design choices we made.
  \includegraphics[width=10cm, height=5cm]{sections/Figures/architecture.png}
 \end{center}
 
-We implemented the whole project in C++ \cite{prj_git}, but for the evaluation we also implemented a Python version of the client. In the following we explain main components of our system. 
+We implement the whole project in C++~\cite{prj_git}. However, we implement the client service in Python and C++ to compare the two implementations. In the following section, we explain the main components of our system. 
 \subsection{Client}
-Client send read/write/delete queries to the edge server. In order to improve performance, client put \texttt{write} and \texttt{delete} requests in an ordered queue and sends query request in a batch. This eliminates the redundant write/delete requests on the same key into database. There are two main threads at the client, one for network operations and the main thread. Therefore, the main thread is not blocked during network communication. 
+The clients send \texttt{read}, \texttt{write}, and \texttt{delete} requests to the edge servers. In order to improve performance, the clients put \texttt{write} and \texttt{delete} requests in an ordered queue. This allows sending the requests in batches and eliminating redundant requests (e.g., on the same key). Our client implementation runs on two worker threads: a network thread and the main thread.
+
+The main thread collects the data from the environment and initiates the requests to communicate with the edge server. The network thread optimizes and dispatches the requests to the edge servers. For this reason, the main thread can continue to collect data and does not have to work for the network communication--where the network latency can be high.
 
 \subsection{Edge Server}
-We implemented our own key-value format database which edge-server inherits from. We define three main queries for read, write, and update. Edge server is meant to be close to the clients and we deployed a REST API for connection between clients and edge servers. The main functionality of edge server is to authorize clients and execute their queries on database and return the result. Since we used REST API, we used \texttt{Put} for write query, \texttt{Get} for read query and \texttt{Delete} for delete query.
+We implement our key-value store database, which is used heavily by the edge servers. We define three main database queries: \texttt{READ}, \texttt{WRITE}, and \texttt{DELETE}. The main functionality of the edge server is to authenticate clients, execute their queries on the database, and return the query result. In our implementation, we use a REST API with three different endpoints for client-server communication.
 
 
 \subsection{Master Server}
-It's important that we guarantee the data persistence among edge servers. We need to make sure if edge servers crashed we don't lose access to it's database; therefore, we also implemented a master server.
-Master server receives backup files from the edge servers and store them on a secure, permanent disk storage. Since, there might be a similar key being used by different edge servers, master-server does not translate backup files into a database object and store them as a \texttt{json} file.
+In our distributed database, it is crucial to guarantee data persistence among edge servers. In order to guarantee a reliable database with low data loss (e.g., in case of a server or network failure), we implement a third architectural component: the master server.
+
+The master server receives backup files from the edge servers and stores them in a secure, permanent disk storage. The master server does not store the backup files in a database object but stores them to--and restores them from--\texttt{json} files.
