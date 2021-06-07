@@ -21,6 +21,8 @@ pypy3 -m pip install requests
 for f in resources/*.json.default; do cp $f ${f%%.default}; done
 ```
 
+Finally, to parse the profiling files and generate the profiling charts, the `matplotlib` and `numpy` Python modules are required.
+
 ## Build
 ```bash
 $ mkdir build
