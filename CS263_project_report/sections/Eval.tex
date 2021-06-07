@@ -3,12 +3,7 @@
 \section{Evaluation}
 \label{sec:Eval}
 \subsection{Profiling and Performance Considerations}
-We profile the client execution on a large set of queries. Our profiling is mainly offline and allows us to assess the implementations' resource usage. The main profiling tool that we use is the Linux \texttt{time} utility with a custom format string (as shown below):
-
-\begin{lstlisting}[language=bash]
-time -o /tmp/profiling --append -f '%e real,%U user,%S sys,\
-%P CPU,%Mk max mem,%R minor pagefaults' pypy3 client.py
-\end{lstlisting}
+We profile the client execution on a large set of queries. Our profiling is mainly offline and allows us to assess the implementations' resource usage. The main profiling tool that we use is the Linux \texttt{time} utility with a custom format string (\texttt{\%e real,\%U user,\%S sys,\%P CPU,\%Mk max mem,\%R minor pagefaults}).
 
 The Linux \texttt{time} utility uses the \texttt{wait4}~\cite{wait4} syscall to wait for the termination of the child process and retrieve both its status information and its resource utilization. The kernel returns the resource utilization metrics in a dedicated memory buffer after processing the syscall.
 
