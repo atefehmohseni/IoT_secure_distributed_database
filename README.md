@@ -1,8 +1,25 @@
 # CS263_project
 These instructions have been tested on an Ubuntu 18.04 machine. 
 
-## Prerequisites
-`libopenssl` and `libpthread` must be installed on the target machine. The Python implementation of the client (`resources/client.py`) has been tested on Python 3.6 and uses the `requests` library for network communication (`pip install requests`). `pypy` must be installed in the target system in order to collect the profiling informations.
+## Requirements
+`libopenssl` and `libpthread` must be installed on the target machine. The Python implementation of the client (`resources/client.py`) has been tested on Python 3.6 and uses the `requests` library for network communication (`pip install requests`). `pypy` must be installed in the target system in order to collect the profiling data.
+
+Additionally, the `.json.default` files in the `resources` directory must be copied as `.json` files in the same directory.
+
+```bash
+# install libssl-dev libpthread-dev python3 pypy3
+sudo add-apt-repository ppa:pypy/ppa
+sudo apt update
+sudo apt-get install libssl-dev libpthread-dev python3 pypy3
+
+# install the python requests module
+pypy3 -m ensurepip
+python3 -m pip install requests
+pypy3 -m pip install requests
+
+# copy the .json.default files
+for f in resources/*.json.default; do cp $f ${f%%.default}; done
+```
 
 ## Build
 ```bash
