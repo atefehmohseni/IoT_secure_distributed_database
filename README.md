@@ -1,17 +1,8 @@
 # CS263_project
-The instruction is for execuritng the program on an Ubuntu 18.04 machine. 
+These instructions have been tested on an Ubuntu 18.04 machine. 
 
 ## Prerequisites
-
-### To Execute the Program
-```bash
-$ sudo apt -get install g++
-$ sudo apt-get install python3.6
-```
-
-### To Get Profiling Information
-- PyPy
-- CPython
+`libopenssl` and `libpthread` must be installed on the target machine. The Python implementation of the client (`resources/client.py`) has been tested on Python 3.6 and uses the `requests` library for network communication (`pip install requests`). `pypy` must be installed in the target system in order to collect the profiling informations.
 
 ## Build
 ```bash
@@ -22,7 +13,7 @@ $ make
 ```
 
 ## Execute
-You should separtely execute the master server, edge-server and a client.
+You should separtely execute the master server, edge-server, and client.
 
 ### Run the Master Server
 ```bash
@@ -44,15 +35,15 @@ $ ./client
 ## Profiling
 
 ### Test cases
-Check out the test queries in [test directory](https://github.com/atefehmohseni/IoT_secure_distributed_database/tree/main/test) that basically runs write/read/delete queries from a client to an edge server.
+The test queries in [test directory](https://github.com/atefehmohseni/IoT_secure_distributed_database/tree/main/test) run write/read/delete queries from a client to an edge server (usage: `cat <test_file> | ./client`).
 
-### Get the Profiling Result
-To get the profiling information of test cases run the following script:
+### Profiling Result
+To collect the profiling information run the following script:
 ```bash
 $ cd resources
 $ ./run_profiling.sh
 ```
-In order to parse the profiling information:
+To parse the profiling information:
 ```bash
 # within the resources directory 
  python3 parse_profiling.py
