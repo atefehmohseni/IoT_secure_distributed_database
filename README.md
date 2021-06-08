@@ -14,8 +14,8 @@ sudo apt-get install -y libssl-dev libpthread-stubs0-dev python3 python3-pip pyp
 
 # create the python/pypy virtualenvs
 python3 -m pip install virtualenv
-python -m virtualenv -p $(which pypy3) ~/.venv_pypy3
-python -m virtualenv -p $(which python3) ~/.venv_python3
+virtualenv -p $(which pypy3) ~/.venv_pypy3
+virtualenv -p $(which python3) ~/.venv_python3
 
 # install the python requests module (pypy3)
 source ~/.venv_pypy3
