@@ -21,12 +21,12 @@ virtualenv -p $(which python3) ~/venv_python3
 source ~/venv_pypy3/bin/activate
 python3 -m ensurepip
 python3 -m pip install requests
+deactivate
 
 # install the python requests module (python3)
 source ~/venv_python3/bin/activate
 python3 -m pip install requests
-
-# deactivate the virtualenvs
+deactivate
 
 # copy the .json.default files
 for f in resources/*.json.default; do cp $f ${f%%.default}; done
