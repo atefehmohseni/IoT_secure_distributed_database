@@ -10,7 +10,7 @@ Additionally, the `.json.default` files in the `resources` directory must be cop
 # install libssl-dev libpthread-dev python3 pypy3
 sudo add-apt-repository ppa:pypy/ppa
 sudo apt update
-sudo apt-get install libssl-dev libpthread-dev python3 pypy3
+sudo apt-get install libssl-dev libpthread-stubs0-dev python3 pypy3
 
 # install the python requests module
 pypy3 -m ensurepip
