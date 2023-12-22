@@ -1,4 +1,4 @@
-# CS263_project
+# Secure Distributed Database for Internet of Things (IoT)
 These instructions have been tested on an Ubuntu 18.04 machine. 
 
 ## Requirements
