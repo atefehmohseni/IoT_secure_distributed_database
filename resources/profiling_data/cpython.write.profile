@@ -8,3 +8,5 @@
 37.28 real,	0.57 user,	0.14 sys,	1% CPU,	24148k max mem,	0 major pagefaults,	8220 minor pagefaults
 33.39 real,	0.52 user,	0.20 sys,	2% CPU,	24320k max mem,	0 major pagefaults,	8247 minor pagefaults
 33.78 real,	0.50 user,	0.10 sys,	1% CPU,	24308k max mem,	0 major pagefaults,	8260 minor pagefaults
+Command exited with non-zero status 1
+5.19 real,	0.11 user,	0.01 sys,	2% CPU,	23236k max mem,	4 major pagefaults,	6039 minor pagefaults
